@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+
+
+
+<html>
+  <head>
+    <meta charset="utf-8">
+      {% block head_title %}
+      {% endblock %}
+
+      {% include './partials/includes-header.html' %}
+
+</head>
+  <body class="animsition">
+    <div class="page-wrapper">
+      <!-- HEADER MOBILE VIEW-->
+      {% include './partials/mobile-header.html' %}
+      <!-- END HEADER MOBILE MENU -->
+
+      <!-- DESKTOP HEADER -->
+      {% include './partials/desktop-header.html' %}
+      <!-- END DESKTOP HEADER -->
+
+      <!-- SIDEBAR MENU -->
+      {% include './partials/sidebar-menu.html' %}
+      <!-- END SIDEBAR MENU -->
+
+      <!-- PAGE CONTAINER-->
+      <div class="page-container">
+        <!-- MAIN CONTENT-->
+        <div class="main-content">
+            <div class="section__content section__content--p30">
+                <div class="container-fluid">
+                    {% block body_block %}
+                    {% endblock %}
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="copyright">
+                      <p>
+                        Copyright © 2019 Feeding Canadian Kids. All rights
+                        reserved.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+      {% include './partials/includes-footer.html' %}
+
+      {% block javascript_block %}
+      {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,120 @@
+{% extends "../base.html" %}
+{% load staticfiles %}
+	{% block head_title %}
+    	<title>Profile Page</title>
+	{% endblock %}
+
+{% block body_block %}
+
+<div class="au-card">
+	<div class="row">
+		<div class="col">
+			<div class="d-inline">
+				<img width="50" src="/static/images/icon/profile_image/{{ view_user.image }}" alt="Profile Image">
+				<h3 class="m-t-10 m-b-5">{{ view_user.first_name|add:" "|add:view_user.last_name }}</h3>
+				{% if view_user.user_type == 'BSC' %}
+					{% if view_user.user_object.type == 'RE' and view_user.user_object.restaurant %}
+						<a href="/admin/restaurant/{{ view_user.user_object.restaurant.id }}/">
+							<h4>{{ view_user.user_object.restaurant.company_name }} <span>(Restaurant)</span></h4>
+						</a>
+					{% elif view_user.user_object.type == 'PR' and view_user.user_object.program %}
+						<a href="/admin/program/{{ view_user.user_object.program.id }}/">
+							<h4>{{ view_user.user_object.program.program_name }} <span>(Program)</span></h4>
+						</a>
+					{% else %}
+					 <h4>Has not applied for {% if view_user.user_object.type == 'PR' %}program{% else %}restaurant{% endif %} yet</h4>
+					{% endif %}
+				{% else %}
+					<h4>Admin</h4>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<br>
+	<div class="row m-t-15">
+		<div class="col">
+
+			<form id="update_user" action="{% url 'admin:edit_user_profile' id=view_user.id %}" method="post">
+				{% csrf_token %}
+				<div class="form-group row">
+			    <label for="email" class="col-sm-3 col-form-label">Email</label>
+			    <div class="col-sm-8">
+			      <input type="text" class="form-control" id="email" name="email" value="{{ view_user.email }}">
+			    </div>
+			  </div>
+
+			  <div class="form-group row">
+			    <label for="first_name" class="col-sm-3 col-form-label">First Name</label>
+			    <div class="col-sm-8">
+			      <input type="text" class="form-control" id="first_name" name="first_name" value="{{ view_user.first_name }}">
+			    </div>
+			  </div>
+
+				<div class="form-group row">
+			    <label for="first_name" class="col-sm-3 col-form-label">Last Name</label>
+			    <div class="col-sm-8">
+			      <input type="text" class="form-control" id="last_name" name="last_name" value="{{ view_user.last_name }}">
+			    </div>
+			  </div>
+
+				<div class="form-group row">
+			    <label for="phone_number" class="col-sm-3 col-form-label">Phone Number</label>
+			    <div class="col-sm-8">
+			      <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ view_user.phone_number }}">
+			    </div>
+			  </div>
+
+				<div class="form-group row">
+			    <label for="phone_number" class="col-sm-3 col-form-label">Status</label>
+			    <div class="col-sm-8">
+						<select id="is_active" name="is_active" class="selectpicker" title="Status" data-width="100%">
+							<option value="1" {% if view_user.active %}selected{% endif %}> Active </option>
+							<option value="0" {% if not view_user.active %}selected{% endif %}> Inactive </option>
+						</select>
+			    </div>
+			  </div>
+
+				<div class="form-group row">
+
+					{% if user.user_object.type == 'RE' %}
+					<label for="c_name" class="col-sm-3 col-form-label">Restaurant Name</label>
+					{% elif user.user_object.type == 'PR' %}
+					<label for="c_name" class="col-sm-3 col-form-label">Programe Name</label>
+					{% endif %}
+			    <div class="col-sm-8">
+						{% if user.user_object.restaurant %}
+							<strong>{{ user.user_object.restaurant }}</strong>
+						{% elif user.user_object.type == 'PR' %}
+						<label for="c_name" class="col-sm-3 col-form-label">Programe Name</label>
+						{% endif %}
+			    </div>
+			  </div>
+
+				<div class="row">
+					<div class="col">
+						<button id="update-btn" type="submit" class="btn btn-success float-right" disabled>Update</button>
+					</div>
+				</div>
+
+
+
+			</form>
+
+		</div>
+	</div>
+
+</div>
+{% endblock %}
+
+
+
+
+{% block javascript_block %}
+<script type="text/javascript">
+
+	$('#update_user').on('change', function(e) {
+		$('#update-btn').prop('disabled', false);
+	});
+
+</script>
+{% endblock %}

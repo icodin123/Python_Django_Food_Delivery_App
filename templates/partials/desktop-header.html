@@ -1,0 +1,121 @@
+{% load staticfiles %}
+<header class="header-desktop">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+              <div class="header-wrap" style="float: right;">
+                <div class="header-button">
+                    {% if request.user.user_type == 'ADM' %}
+                    <div class="noti-wrap">
+                        <div class="noti__item js-item-menu">
+                            <i class="zmdi zmdi-notifications"></i>
+                            <span class="quantity">{{ request.num_notifications }}</span>
+                            <div class="notifi-dropdown js-dropdown">
+                                <div class="notifi__title">
+                                    <p>You have {{ request.num_notifications }} Notifications</p>
+                                </div>
+                                {% if request.notifications %}
+                                    {% for notification in request.notifications %}
+                                        <span>
+                                        {% if notification.notification_type == "A" %}
+                                            <a href="/admin/notifications/{{ notification.id }}/visit/" class="notifi__item">
+                                                <div class="bg-c3 img-cir img-40">
+                                                    <i class="zmdi zmdi-file-text"></i>
+                                                </div>
+                                                <div class="content">
+                                                    <p class="capitalize"> {{ notification.content }} </p>
+                                                    <span class="date">{{ notification.created_at }}</span>
+                                                </div>
+
+                                            </a>
+                                        {% elif notification.notification_type == "R" %}
+                                            <a href="/admin/notifications/{{ notification.id }}/visit/" class="notifi__item">
+                                              <div class="bg-c1 img-cir img-40">
+                                                <i class="zmdi zmdi-email-open"></i>
+                                              </div>
+                                            <div class="content">
+                                                <p class="capitalize"> {{ notification.content }} </p>
+                                                <span class="date">{{ notification.created_at }}</span>
+                                            </div>
+                                            </a>
+                                        {% else %}
+                                            <a href="/admin/notifications/{{ notification.id }}/visit/" class="notifi__item">
+                                              <div class="bg-c2 img-cir img-40">
+                                                <i class="zmdi zmdi-account-box"></i>
+                                              </div>
+                                            <div class="content">
+                                                <p class="capitalize">{{ notification.content }}</p>
+                                                <span class="date">{{ notification.created_at }}</span>
+                                            </div>
+                                            </a>
+                                        {% endif %}
+                                        </span>
+                                    {% endfor %}
+                                {% else %}
+                                <br>
+                                    <h4 align="center">No new notifications</h4>
+                                {% endif %}
+                                <div class="notifi__footer">
+                                    <a href="/admin/notifications/">All notifications</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="account-wrap">
+                        <div class="account-item clearfix js-item-menu">
+                            <div class="image">
+                                <img src="/static/images/icon/profile_image/{{user.image}}" alt="{{ user.first_name|add:" "|add:user.last_name }}" />
+                            </div>
+                            <div class="content">
+                                <a class="js-acc-btn" href="#">{{ user.first_name|add:" "|add:user.last_name }}</a>
+                            </div>
+                            <div class="account-dropdown js-dropdown">
+                                <div class="info clearfix">
+                                    <div class="image">
+                                        <a href="#">
+                                            <img src="/static/images/icon/profile_image/{{user.image}}" alt="{{ user.first_name|add:" "|add:user.last_name }}" />
+                                        </a>
+                                    </div>
+                                    <div class="content">
+                                        <h5 class="name">
+                                            <a href="#">{{ user.first_name|add:" "|add:user.last_name }}</a>
+                                        </h5>
+                                        <span class="email">{{ user.email }}</span>
+                                    </div>
+                                </div>
+                                <div class="account-dropdown__body">
+                                    {% if user.user_type == 'BSC' %}
+                                    <div class="account-dropdown__item">
+                                        <a href="/resources">
+                                            <i class="zmdi zmdi-file-text"></i>Resources</a>
+                                    </div>
+                                    {% endif %}
+                                    {% if user.user_type == 'ADM' %}
+                                    <div class="account-dropdown__item">
+                                        <a href="/admin/mealhistory">
+                                            <i class="zmdi zmdi-cutlery"></i>Meal History</a>
+                                    </div>
+                                    {% endif %}
+                                    <div class="account-dropdown__item">
+                                    {% if user.user_type == 'ADM' %}
+                                        <a href="/admin/settings/">
+                                            <i class="zmdi zmdi-settings"></i>Settings</a>
+                                    {% else %}
+                                        <a href="/settings/">
+                                            <i class="zmdi zmdi-settings"></i>Settings</a>
+                                    {% endif %}
+                                    </div>
+
+                                </div>
+                                <div class="account-dropdown__footer">
+                                    <a href="/logout">
+                                        <i class="zmdi zmdi-power"></i>Logout</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

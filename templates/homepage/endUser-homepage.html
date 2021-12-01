@@ -1,0 +1,238 @@
+{% extends "../base.html" %}
+
+	{% block head_title %}
+    	<title>Home</title>
+	{% endblock %}
+
+{% block body_block %}
+<div class="au-card">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="overview-wrap">
+        <h2 class="title-1">Schedule</h2>
+      </div>
+    </div>
+  </div>
+	<br>
+  <div class="section__content section__content--p30">
+    <div class="table-responsive table--no-card m-b-40">
+      <table
+        class="table table-borderless table-striped table-earning"
+        align="center"
+      >
+				<thead>
+					<tr>
+						<th></th>
+						<th>Monday</th>
+						<th>Tuesday</th>
+						<th>Wednesday</th>
+						<th>Thursday</th>
+						<th>Friday</th>
+					</tr>
+				</thead>
+        <tbody>
+          <tr>
+              <td>Delivery</td>
+              <td>{{ schedule.monday_start }}</td>
+              <td>{{ schedule.tuesday_start}}</td>
+              <td>{{ schedule.wednesday_start}}</td>
+              <td>{{ schedule.thursday_start}}</td>
+              <td>{{ schedule.friday_start}}</td>
+          </tr>
+					<tr>
+              <td>Meals</td>
+							<td>{{ schedule.monday_start_meals }}</td>
+              <td>{{ schedule.tuesday_start_meals }}</td>
+              <td>{{ schedule.wednesday_start_meals }}</td>
+              <td>{{ schedule.thursday_start_meals }}</td>
+              <td>{{ schedule.friday_start_meals }}</td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="overview-wrap">
+				{% if user.user_object.type == 'PR' %}
+        <h2 class="title-1">Restaurant Information</h2>
+				{% else %}
+				<h2 class="title-1">Program Information</h2>
+				{% endif %}
+      </div>
+    </div>
+  </div>
+
+	<br>
+
+  <div class="section__content section__content--p30">
+      <div class="row">
+
+        {% if user.user_object.type == 'PR' %}
+
+            <div class="table-responsive table--no-card m-b-40">
+                <table id="existingPairings"
+                class="table table-borderless table-striped table-earning"
+                align="center"
+                >
+                    <thead>
+                        <tr>
+                            <th>Company name</th>
+                            <th>Main contact</th>
+                            <th>Phone number</th>
+                            <th>Schedule</th>
+                            <th>Meals</th>
+                            <th>Uber eats</th>
+                            <th>Delivery capacity</th>
+                            <th>Packaging</th>
+                            <th>Health certificate</th>
+                            <th>Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                         {% for restaurant in pairing_info %}
+                        <tr>
+                            <td>{{ restaurant.company_name }}</td>
+                            <td>{{ restaurant.main_contact.first_name }} {{ restaurant.main_contact.last_name }}</td>
+                            <td>{{ restaurant.phone_number }}</td>
+                            <td>
+
+
+                                {% if restaurant.schedule.monday_start != None %}
+                                    <span style="color:red; font-weight:600;">M</span>
+                                {% else %}
+                                    <span style="color:black; font-weight:400;">M</span>
+                                {% endif %}
+
+                                {% if restaurant.schedule.tuesday_start != None %}
+                                    <span style="color:red; font-weight:600;">T</span>
+                                {% else %}
+                                    <span style="color:black; font-weight:400;">T</span>
+                                {% endif %}
+
+                                {% if restaurant.schedule.wednesday_start != None %}
+                                    <span style="color:red; font-weight:600;">W</span>
+                                {% else %}
+                                    <span style="color:black; font-weight:400;">W</span>
+                                {% endif %}
+
+                                {% if restaurant.schedule.thursday_start != None %}
+                                    <span style="color:red; font-weight:600;">T</span>
+                                {% else %}
+                                    <span style="color:black; font-weight:400;">T</span>
+                                {% endif %}
+
+                                {% if restaurant.schedule.friday_start != None %}
+                                    <span style="color:red; font-weight:600;">F</span>
+                                {% else %}
+                                    <span style="color:black; font-weight:400;">F</span>
+                                {% endif %}
+
+                            </td>
+                            <td>{{ restaurant.meals }}</td>
+
+                            {% if restaurant.uber_eats %}
+                                <td>Yes</td>
+                            {% else %}
+                                <td>No</td>
+                            {% endif %}
+
+                            {% if restaurant.delivery_capacity %}
+                                <td>Yes</td>
+                            {% else %}
+                                <td>No</td>
+                            {% endif %}
+
+                            {% if restaurant.packaging %}
+                                <td>Yes</td>
+                            {% else %}
+                                <td>No</td>
+                            {% endif %}
+
+                            <td>{{ restaurant.health_certificate }}</td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        {% elif user.user_object.type == 'RE' %}
+
+            <div class="table-responsive table--no-card m-b-40">
+                <table id="existingPairings"
+                class="table table-borderless table-striped table-earning"
+                align="center"
+                >
+                    <thead>
+                        <tr>
+                            <th>Program name</th>
+                            <th>Main contact</th>
+                            <th>Phone number</th>
+                            <th>Schedule</th>
+                            <th>Meals</th>
+                            <th>Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                         {% for program in pairing_info %}
+                        <tr>
+                            <td>{{ program.program_name }}</td>
+                            <td>{{ program.main_contact.first_name }} {{ program.main_contact.last_name }}</td>
+                            <td>{{ program.phone_number }}</td>
+                            <td>
+
+                                {% if program.schedule.monday_start != None %}
+                                    <span style="color:red; font-weight:600;">M</span>
+                                {% else %}
+                                    <span style="color:black; font-weight:400;">M</span>
+                                {% endif %}
+
+                                {% if program.schedule.tuesday_start != None %}
+                                    <span style="color:red; font-weight:600;">T</span>
+                                {% else %}
+                                    <span style="color:black; font-weight:400;">T</span>
+                                {% endif %}
+
+                                {% if program.schedule.wednesday_start != None %}
+                                    <span style="color:red; font-weight:600;">W</span>
+                                {% else %}
+                                    <span style="color:black; font-weight:400;">W</span>
+                                {% endif %}
+
+                                {% if program.schedule.thursday_start != None %}
+                                    <span style="color:red; font-weight:600;">T</span>
+                                {% else %}
+                                    <span style="color:black; font-weight:400;">T</span>
+                                {% endif %}
+
+                                {% if program.schedule.friday_start != None %}
+                                    <span style="color:red; font-weight:600;">F</span>
+                                {% else %}
+                                    <span style="color:black; font-weight:400;">F</span>
+                                {% endif %}
+
+
+                            </td>
+
+                            <td>{{ program.meals }}</td>
+
+                            <td>{{ program.address }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        {% endif %}
+
+
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}

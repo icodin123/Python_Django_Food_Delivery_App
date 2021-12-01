@@ -1,0 +1,46 @@
+{% if user.user_type == 'BSC' %}
+<li {% if request.path == '/' %}class="active"{% endif %}>
+    <a href="/">
+        <i class="fas fa-home" ></i>Home</a>
+</li>
+
+<li {% if request.path == '/requests/' %}class="active"{% endif %}>
+    <a href="/requests">
+        <i class="fas fa-flag"></i>Requests</a>
+</li>
+{% endif %}
+
+{% if user.user_type == 'ADM' %}
+<li {% if request.path == '/admin/' %}class="active"{% endif %}>
+    <a href="/">
+        <i class="fas fa-home"></i>Home</a>
+</li>
+<li {% if request.path == '/admin/restaurants/' %}class="active"{% endif %}>
+    <a href="/admin/restaurants">
+        <i class="fas fa-utensils"></i>Restaurants</a>
+</li>
+<li {% if request.path == '/admin/programs/' %}class="active"{% endif %}>
+    <a href="/admin/programs">
+        <i class="fas fa-building"></i>Programs</a>
+</li>
+<li {% if request.path == '/admin/pairings/' %}class="active"{% endif %}>
+    <a href="/admin/pairings">
+        <i class="fas fa-handshake"></i>Pairings</a>
+</li>
+
+<li {% if request.path == '/admin/applications/' %}class="active"{% endif %}>
+    <a href="/admin/applications">
+        <i class="far fa-address-card"></i>Applications</a>
+</li>
+
+<li {% if request.path == '/admin/requests/' %}class="active"{% endif %}>
+    <a href="/admin/requests">
+        <i class="fas fa-exclamation"></i>Requests</a>
+</li>
+
+<li {% if request.path == '/admin/resources/' %}class="active"{% endif %}>
+    <a href="/admin/resources">
+        <i class="fas fa-file-alt"></i>Resources</a>
+</li>
+
+{% endif %}

@@ -1,0 +1,590 @@
+{% extends "../base.html" %}
+
+
+{% block head_title %}
+    <title>Admin Application Review</title>
+{% endblock %}
+
+{% block body_block %}
+    <div class="row">
+        <div class="col-md-12">
+          <h2 class="title-1">Review Application</h2>
+        </div>
+    </div>
+    <br>
+
+{% if application %}
+
+                <div id="optionsCard" class="au-card">
+
+                <div class="row m-t-25">
+                    <div class="col-md-6">
+                      <p><strong>Type</strong></p>
+                    </div>
+                    <div class="col-md-6">
+                      <p class="school_point_contact">
+                        {% if application.model_id.user_object.type == 'RE' %}
+                        Restaurant
+                        {% elif application.model_id.user_object.type == 'PR' %}
+                        Program
+                        {% endif %}
+                      </p>
+                    </div>
+                  </div>
+
+                  {% if application.model_id.user_object.type == 'RE' %}
+
+                    <form id="acceptForm" action="{% url 'admin:accept' id=id %}" method="post">
+				        {% csrf_token %}
+                <input id="lat" type="hidden" name="lat" value="{{application.model_id.user_object.restaurant.latitude}}">
+                <input id="lng" type="hidden" name="lng" value="{{application.model_id.user_object.restaurant.longitude}}">
+
+                              <div class="row m-t-25">
+                                <div class="col-md-6">
+                                  <p><strong>Main contact: </strong></p>
+                                </div>
+                                  <div class="col-md-6">
+                                      <a href="{% url 'admin:user_profile' id=application.model_id.id %}">
+                                        <p>{{ application.model_id.first_name }} {{ application.model_id.last_name }}</p>
+                                      </a>
+                                  </div>
+                              </div>
+
+                             <div class="row m-t-25">
+                                <div class="col-md-6">
+                                  <p><strong>Applied on: </strong></p>
+                                </div>
+                                  <div class="col-md-6">
+                                      {{ application.model_id.user_object.restaurant.created_at }}
+                                  </div>
+
+                              </div>
+
+
+                        <div class="row m-t-25">
+                            <div class="col-md-6">
+                              <p><strong>Retaurant name: </strong></p>
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" placeholder="Restaurant name" id="restaurant_name_input"
+                                       name="restaurant_name_input">
+                             </div>
+                          </div>
+
+                        <div class="row m-t-25">
+                            <div class="col-md-6">
+                              <p><strong>Address: </strong></p>
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" placeholder="Address" id="restaurant_address_input"
+                                       name="address" autocomplete="off">
+                             </div>
+                          </div>
+
+                          <div class="row m-t-25">
+                             <div class="col-md-6">
+                               <p><strong>Latitude: </strong></p>
+                             </div>
+                               <div class="col-md-6">
+                                   <p>{{ application.model_id.user_object.restaurant.latitude }}</p>
+                               </div>
+                           </div>
+                          <div class="row m-t-25">
+                             <div class="col-md-6">
+                               <p><strong>Longitude: </strong></p>
+                             </div>
+                               <div class="col-md-6">
+                                   <p>{{ application.model_id.user_object.restaurant.longitude }}</p>
+                               </div>
+                           </div>
+
+
+                        <div class="row m-t-25">
+                            <div class="col-md-6">
+                              <p><strong>Health Certificate: </strong></p>
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" placeholder="Health Certificate" id="restaurant_health_input"
+                                       name="restaurant_health_input">
+                             </div>
+                          </div>
+
+                        <div class="row m-t-25">
+                            <div class="col-md-6">
+                              <p><strong>Meals: </strong></p>
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control" type="number" placeholder="0" id="restaurant_meals_input"
+                                       name="restaurant_meals_input">
+                             </div>
+                          </div>
+
+                        <div class="row m-t-25">
+                            <div class="col-md-6">
+                              <p><strong>Delivery capacity: </strong></p>
+                            </div>
+                            <div class="col-md-6">
+
+                              <select id="delivery_capacity" class="selectpicker" name="delivery_capacity" form="acceptForm">
+            						        <option value="True">Yes</option>
+            						        <option value="False">No</option>
+            						      </select>
+
+                             </div>
+                          </div>
+
+                        <div class="row m-t-25">
+                            <div class="col-md-6">
+                              <p><strong>Packaging: </strong></p>
+                            </div>
+                            <div class="col-md-6">
+
+                              <select id="packaging" class="selectpicker" name="packaging" form="acceptForm">
+            						        <option value="True">Yes</option>
+            						        <option value="False">No</option>
+            						        </select>
+                             </div>
+                          </div>
+
+                        <div class="row m-t-25">
+                            <div class="col-md-6">
+                              <p><strong>Uber Eats: </strong></p>
+                            </div>
+                            <div class="col-md-6">
+                              <select id="uber_eats" class="selectpicker" name="uber_eats" form="acceptForm">
+            						        <option value="True">Yes</option>
+            						        <option value="False">No</option>
+          						        </select>
+                             </div>
+                          </div>
+
+
+                          <div class="row m-t-25">
+                              <div class="col-md-6">
+                                <p><strong>Available 3-5pm: </strong></p>
+                              </div>
+                              <div class="col-md-6">
+                                <select id="schedule_available" name="schedule_available" class="selectpicker" title="Are you available between 3 and 5pm?" data-width="100%" required>
+  																<option value="True" {% if application.model_id.user_object.restaurant.schedule.monday_start %}selected{% endif %}> Yes </option>
+  																<option value="False" {% if not application.model_id.user_object.restaurant.schedule.monday_start %}selected{% endif %}> No </option>
+  															</select>
+                               </div>
+                            </div>
+
+
+
+
+                          <br>
+
+                          <div class="row m-t-30">
+                              <div class="col-sm-12 text-center">
+                                 <input id='denyButton2' type="button" class="btn btn-outline-danger float-left" value="Deny">
+                                 <input type='submit' class="btn btn-outline-success float-right" value="Accept">
+                              </div>
+                          </div>
+			         </form>
+
+
+                    {% elif application.model_id.user_object.type == 'PR' %}
+                     <div class="row m-t-25">
+                        <div class="col-md-6">
+                          <p><strong>Applied on: </strong></p>
+                        </div>
+                          <div class="col-md-6">
+                            <p>{{ application.model_id.user_object.program.created_at}}</p>
+                          </div>
+                      </div>
+
+                    <div class="row m-t-25">
+                        <div class="col-md-6">
+                          <p><strong>Main contact:</strong></p>
+                        </div>
+                          <div class="col-md-6">
+                            <a href="{% url 'admin:user_profile' id=application.model_id.id %}">
+                              <p>{{ application.model_id.first_name}} {{ application.model_id.last_name}}</p>
+                            </a>
+                          </div>
+                      </div>
+
+                      <div class="row m-t-25">
+                         <div class="col-md-6">
+                           <p><strong>Latitude: </strong></p>
+                         </div>
+                           <div class="col-md-6">
+                               <p>{{ application.model_id.user_object.program.latitude }}</p>
+                           </div>
+                       </div>
+                      <div class="row m-t-25">
+                         <div class="col-md-6">
+                           <p><strong>Longitude: </strong></p>
+                         </div>
+                           <div class="col-md-6">
+                               <p>{{ application.model_id.user_object.program.longitude }}</p>
+                           </div>
+                       </div>
+
+                      <form id="acceptForm" action="{% url 'admin:accept' id=id %}" method="post">
+				        {% csrf_token %}
+                <input id="lat" type="hidden" name="lat" value="{{application.model_id.user_object.program.latitude}}">
+                <input id="lng" type="hidden" name="lng" value="{{application.model_id.user_object.program.longitude}}">
+                          <div class="row m-t-25">
+                            <div class="col-md-6">
+                              <p><strong>Phone number: </strong></p>
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" placeholder="Your Phone Number"
+                                       id="program_phone_number_input" name="program_phone_number_input" pattern="\/.*\S.*\/|1?[\s-]?\.?\(?(\d{3})\)?\.?[\s-]?\d{3}[\s-]?\.?\d{4}" title="Enter your phone number">
+                             </div>
+                          </div>
+
+                          <div class="row m-t-25">
+                            <div class="col-md-6">
+                              <p><strong>Program name: </strong></p>
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" placeholder="Program Name" id="program_name_input"
+                                       name="program_name_input">
+                             </div>
+                          </div>
+
+                          <div class="row m-t-25">
+                            <div class="col-md-6">
+                              <p><strong>Meals: </strong></p>
+                            </div>
+                            <div class="col-md-6">
+                              <input class="form-control" type="number" placeholder="How many meals?" id="program_meals_input"
+                                     name="program_meals_input">
+                             </div>
+                          </div>
+
+
+                        <div class="row m-t-25">
+                            <div class="col-md-6">
+                              <p><strong>Address: </strong></p>
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" placeholder="Address" id="program_address_input" name="address">
+                             </div>
+                          </div>
+
+
+                          <div class="row m-t-25">
+                            <div class="col-md-6">
+                              <p><strong>Program schedule: </strong></p>
+                            </div>
+                          </div>
+                        <br>
+                        <div class="table-responsive table--no-card m-b-40">
+                            <table
+                              class="table table-borderless table-striped table-earning"
+                              align="center"
+                            >
+                              <thead>
+                                <tr>
+                                  <th></th>
+                                  <th>Monday</th>
+                                  <th>Tuesday</th>
+                                  <th>Wednesday</th>
+                                  <th>Thursday</th>
+                                  <th>Friday</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+    							<tr>
+    							    <td> Start time </td>
+
+
+                                    {% if application.model_id.user_object.program.schedule.monday_start != None %}
+                                        <td> {{ application.model_id.user_object.program.schedule.monday_start }} </td>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+
+                                    {% if application.model_id.user_object.program.schedule.tuesday_start != None %}
+                                        <td> {{ application.model_id.user_object.program.schedule.tuesday_start }} </td>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+
+                                    {% if application.model_id.user_object.program.schedule.wednesday_start != None %}
+                                        <td> {{ application.model_id.user_object.program.schedule.wednesday_start }} </td>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+
+                                    {% if application.model_id.user_object.program.schedule.thursday_start != None %}
+                                        <td> {{ application.model_id.user_object.program.schedule.thursday_start }} </td>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+
+                                    {% if application.model_id.user_object.program.schedule.friday_start != None %}
+                                        <td> {{ application.model_id.user_object.program.schedule.friday_start }} </td>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+
+
+                              	<tr>
+    							    <td> End time </td>
+
+
+                                    {% if application.model_id.user_object.program.schedule.monday_end != None %}
+                                        <td> {{ application.model_id.user_object.program.schedule.monday_end }} </td>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+
+                                    {% if application.model_id.user_object.program.schedule.tuesday_end != None %}
+                                        <td> {{ application.model_id.user_object.program.schedule.tuesday_end }} </td>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+
+                                    {% if application.model_id.user_object.program.schedule.wednesday_end != None %}
+                                        <td> {{ application.model_id.user_object.program.schedule.wednesday_end }} </td>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+
+                                    {% if application.model_id.user_object.program.schedule.thursday_end != None %}
+                                        <td> {{ application.model_id.user_object.program.schedule.thursday_end }} </td>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+
+                                    {% if application.model_id.user_object.program.schedule.friday_end != None %}
+                                        <td> {{ application.model_id.user_object.program.schedule.friday_end }} </td>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+
+
+    							</tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+
+
+
+                        <div class="row m-t-25">
+                            <div class="col-md-6">
+                              <p><strong>Update schedule: </strong></p>
+                            </div>
+                            <div class="col-md-6">
+
+										<div class="input-container">
+											<i class="fas fa-calendar icon"></i>
+											<select id="program_schedule" name="program_schedule" class="selectpicker" multiple data-actions-box="true" title="What days are required?" data-width="100%" required>
+												<option value="MO" {% if application.model_id.user_object.program.schedule.monday_start %}selected{% endif %}> Monday </option>
+												<option value="TU" {% if application.model_id.user_object.program.schedule.tuesday_start %}selected{% endif %}> Tuesday </option>
+												<option value="WE" {% if application.model_id.user_object.program.schedule.wednesday_start %}selected{% endif %}> Wednesday </option>
+												<option value="TH" {% if application.model_id.user_object.program.schedule.thursday_start %}selected{% endif %}> Thursday </option>
+												<option value="FR" {% if application.model_id.user_object.program.schedule.friday_start %}selected{% endif %}> Friday </option>
+											</select>
+										</div>
+                             </div>
+                          </div>
+                        <div class="row m-t-25">
+                            <div class="col-md-6">
+                              <p><strong>Update delivery time: </strong></p>
+                            </div>
+                            <div class="col-md-6">
+										<div class="input-container m-t-20">
+											<i class="fas fa-clock icon"></i>
+											<input id="program_starttime" class="form-control timepicker" name="program_starttime" placeholder="Select a start time" required autocomplete="off">
+										</div>
+                             </div>
+                          </div>
+                          <br>
+                          <br>
+                          <div class="row">
+                              <div class="col-sm-12 text-center">
+                                <input id='denyButton1' type="button" class="btn btn-outline-danger float-left" value="Deny">
+                                <input type='submit' class="btn btn-outline-success float-right" value="Accept">
+                              </div>
+                          </div>
+			         </form>
+
+                    {% endif %}
+                  <br>
+                  <br>
+              </div>
+
+
+              <div id="commentCard" class="au-card" style="display: none;">
+                  <div class="row m-t-15">
+                    <div class="col-md-12">
+            			     <form id="denyForm" action="{% url 'admin:deny' id=id %}" method="post">
+            				     {% csrf_token %}
+
+                                 <h3>Deny Request</h3>
+
+                                 <br>
+                                <strong>Reminder: </strong>Changes from previous page are not stored and displayed to {{ application.model_id.first_name }}.
+                                <textarea name="comment" placeholder="Describe the reason for denial here to {{ application.model_id.first_name }}..." class="form-control m-t-15" rows="5" id="comment"></textarea>
+
+                                <br>
+                                <br>
+
+                                 <div class="row text-center">
+                                     <div class="col-12">
+                                        <input id='backButton' type='button' class="btn btn-outline-danger" value="Back">
+                                         <input type="submit" class="btn btn-outline-success m-l-25" value="Send">
+                                     </div>
+                                 </div>
+
+
+            			    </form>
+                    </div>
+                  </div>
+                </div>
+{% else %}
+  <h4>no application :(</h4>
+{% endif %}
+
+{% endblock %}
+
+{% block javascript_block %}
+  <script type="text/javascript">
+
+            let organization_type = ''
+            organization_type='{{ application.model_id.user_object.type }}'
+
+
+
+			$("#denyButton1").on('click', function(e) {
+
+				$("#optionsCard").hide("fast");
+				$("#commentCard").show("fast");
+			});
+
+			$("#denyButton2").on('click', function(e) {
+
+				$("#optionsCard").hide("fast");
+				$("#commentCard").show("fast");
+			});
+
+			$("#backButton").on('click', function(e) {
+
+				$("#optionsCard").show("fast");
+				$("#commentCard").hide("fast");
+			});
+
+            $('.timepicker').timepicker({
+                timeFormat: 'h:mm p',
+                interval: 60,
+                minTime: '7:00am',
+                maxTime: '6:00pm',
+                dynamic: false,
+                dropdown: true,
+                scrollbar: true,
+                zindex: 1060
+            });
+
+			if(organization_type == 'PR'){
+
+                $('#program_phone_number_input').attr("placeholder",
+                `{{ application.model_id.phone_number }}`);
+                $('#program_name_input').attr("placeholder",
+                `{{ application.model_id.user_object.program.program_name }}`);
+                $('#program_meals_input').attr("placeholder",
+                `{{ application.model_id.user_object.program.meals }}`);
+                $('#program_address_input').attr("placeholder",
+                `{{ application.model_id.user_object.program.address }}`);
+
+                let time = '';
+
+
+                {% if application.model_id.user_object.program.schedule.monday_start %}time='{{application.model_id.user_object.program.schedule.monday_start}}'{% endif %}
+                {% if application.model_id.user_object.program.schedule.tuesday_start %}time='{{application.model_id.user_object.program.schedule.tuesday_start}}'{% endif %}
+                {% if application.model_id.user_object.program.schedule.wednesday_start %}time='{{application.model_id.user_object.program.schedule.wednesday_start}}'{% endif %}
+                {% if application.model_id.user_object.program.schedule.thursday_start %}time='{{application.model_id.user_object.program.schedule.thursday_start}}'{% endif %}
+                {% if application.model_id.user_object.program.schedule.friday_start %}time='{{application.model_id.user_object.program.schedule.friday_start}}'{% endif %}
+                {% if application.model_id.user_object.program.schedule.saturday_start %}time='{{application.model_id.user_object.program.schedule.saturday_start}}'{% endif %}
+                {% if application.model_id.user_object.program.schedule.sunday_start %}time='{{application.model_id.user_object.program.schedule.sunday_start}}'{% endif %}
+
+                $('#program_starttime').val(time)
+
+			}
+			else{
+                {% if application.model_id.user_object.restaurant.delivery_capacity %}
+                $('#delivery_capacity').val("True");
+                {% else %}
+                $('#delivery_capacity').val("False");
+                {% endif %}
+
+                {% if application.model_id.user_object.restaurant.packaging %}
+                $('#packaging').val("True");
+                {% else %}
+                $('#packaging').val("False");
+                {% endif %}
+
+                {% if application.model_id.user_object.restaurant.uber_eats %}
+                $('#uber_eats').val("True");
+                {% else %}
+                $('#uber_eats').val("False");
+                {% endif %}
+
+                 $('#restaurant_name_input').attr("placeholder",
+                `{{ application.model_id.user_object.restaurant.company_name }}`);
+
+                $('#restaurant_address_input').attr("placeholder",
+                `{{ application.model_id.user_object.restaurant.address }}`);
+
+                $('#restaurant_meals_input').attr("placeholder",
+                `{{ application.model_id.user_object.restaurant.meals }}`);
+
+                $('#restaurant_health_input').attr("placeholder",
+                `{{ application.model_id.user_object.restaurant.health_certificate }}`);
+
+                let rest_time = '';
+
+                {% if application.model_id.user_object.restaurant.schedule.monday_start %}rest_time='{{application.model_id.user_object.restaurant.schedule.monday_start}}'{% endif %}
+                {% if application.model_id.user_object.restaurant.schedule.tuesday_start %}rest_time='{{application.model_id.user_object.restaurant.schedule.tuesday_start}}'{% endif %}
+                {% if application.model_id.user_object.restaurant.schedule.wednesday_start %}rest_time='{{application.model_id.user_object.restaurant.schedule.wednesday_start}}'{% endif %}
+                {% if application.model_id.user_object.restaurant.schedule.thursday_start %}rest_time='{{application.model_id.user_object.restaurant.schedule.thursday_start}}'{% endif %}
+                {% if application.model_id.user_object.restaurant.schedule.friday_start %}rest_time='{{application.model_id.user_object.restaurant.schedule.friday_start}}'{% endif %}
+                {% if application.model_id.user_object.restaurant.schedule.saturday_start %}rest_time='{{application.model_id.user_object.restaurant.schedule.saturday_start}}'{% endif %}
+                {% if application.model_id.user_object.restaurant.schedule.sunday_start %}rest_time='{{application.model_id.user_object.restaurant.schedule.sunday_start}}'{% endif %}
+
+
+                $('#restaurant_starttime').val(rest_time)
+			}
+
+		</script>
+
+    <script type="text/javascript">
+
+      $(document).ready( function () {
+          {% if application.model_id.user_object.type == 'RE' %}
+          var input = document.getElementById('restaurant_address_input');
+          {% elif application.model_id.user_object.type == 'PR' %}
+          var input = document.getElementById('program_address_input');
+          {% endif %}
+
+
+
+          var options = {
+              fields: ['address_component', 'geometry'],
+              location: '43.717899,-79.6582408'
+          };
+
+          autocomplete = new google.maps.places.Autocomplete(input, options);
+          autocomplete.setComponentRestrictions({'country': ["CA"]});
+          autocomplete.addListener('place_changed', function() {
+              // Update coordinates whenever a place is selected
+              var place = autocomplete.getPlace();
+              $('#lat').val(place.geometry.location.lat());
+              $('#lng').val(place.geometry.location.lng());
+          });
+
+
+
+      } );
+
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "../base.html" %}
+
+	{% block head_title %}
+    	<title>Meal History</title>
+	{% endblock %}
+
+{% block body_block %}
+
+
+  <div class="row">
+      <div class="col-md-12">
+          <div class="overview-wrap">
+              <h2 class="title-1">Meals Served</h2>
+          </div>
+      </div>
+  </div>
+
+  <div class="row m-t-25">
+      <div class="col-lg-12">
+          <div class="table-responsive table--no-card m-b-40">
+              <table id="todays-schedule" class="table table-borderless table-striped table-earning">
+                  <thead>
+                      <tr>
+													<th>Served On</th>
+                          <th>Program</th>
+                          <th>Restaurant</th>
+                          <th>Meals</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for meal in meals_paired %}
+                          <tr>
+															<td>{{ meal.created_at|date:"M d, Y" }}</td>
+                              <td>
+																{% if meal.program_id %}
+																<a href="{% url 'admin:program' id=meal.program_id.id %}">
+																	{{meal.program_id.program_name}}
+																</a>
+																{% else %}
+																Initial
+																{% endif %}
+															</td>
+                              <td>
+																{% if meal.restaurant_id %}
+																<a href="{% url 'admin:restaurant' id=meal.restaurant_id.id %}">
+																	{{meal.restaurant_id.company_name}}
+																</a>
+																{% else %}
+																Initial
+																{% endif %}
+															</td>
+                              <td>
+																<form class="" action="{% url 'admin:meal_history_update' %}" method="post">
+																	{% csrf_token %}
+																	<input type="hidden" value="{{meal.id}}" name="history_id">
+																	<input type="number" name="meals_count" readonly class="form-control-plaintext meal_count" id="meal_count_{{meal.id}}" value="{{meal.meals}}">
+																</form>
+															</td>
+                          </tr>
+                      {% endfor%}
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+
+{% endblock %}
+
+{% block javascript_block %}
+<script type="text/javascript">
+
+	$('.meal_count').on('click', function(e) {
+		$(this).prop('readonly',false);
+		$(this).removeClass('form-control-plaintext');
+		$(this).addClass('form-control');
+
+	});
+
+</script>
+{% endblock %}

@@ -1,0 +1,254 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<!-- meta tags-->
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="Feeding Canadian Kids">
+		<meta name="author" content="Feeding Canadian Kids">
+		<meta name="keywords" content="Feeding Canadian Kids">
+
+		<!-- Title Page-->
+		<title>Application Status</title>
+
+		<link href="{% static "vendor/font-awesome-4.7/css/font-awesome.min.css" %}" rel="stylesheet" media="all">
+		<link href="{% static "vendor/font-awesome-5/css/fontawesome-all.min.css" %}" rel="stylesheet" media="all">
+
+		<!-- Bootstrap CSS -->
+		<link href="{% static "vendor/bootstrap-4.1/bootstrap.min.css"%}" rel="stylesheet" media="all">
+		<!-- Selectpicker -->
+		<link href="{% static "vendor/bootstrap-select-1.13.9/css/bootstrap-select.min.css" %}" rel="stylesheet" media="all">
+		<link href="{% static "vendor/timepicker/1.3.5/jquery.timepicker.min.css" %}" rel="stylesheet" media="all">
+
+		<!-- Main CSS-->
+		<link href="{% static "css/main.css" %}" rel="stylesheet" media="all">
+		<link href="{% static "css/signup-login.css" %}" rel="stylesheet" type="text/css">
+
+		<!-- Google Maps API -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ request.google_api_key }}&libraries=places"></script>
+
+	</head>
+
+	<body>
+
+		<div class="limiter">
+			<div class="container-login">
+				<div class="apply-card">
+					<div class="container-fliud">
+						<div class="row">
+							<div class="col-4">
+								<div class="row">
+									<h1>Hi {{ user.first_name }},</h1>
+								</div>
+								<div class="row m-t-25">
+									<div class="col">
+										<h4>
+											Thank for submitting your application!
+										</h4>
+										<br>
+										{% if review.status == 'P' %}
+										<p>
+											We will work to get back to you within 48 business hours.
+										</p>
+										{% elif review.status == 'R' %}
+										<p>
+											Unfortunately, we will require you to re-submit this form.
+										</p>
+										<br>
+										<strong>
+											Please review the following comments before sending the form again:
+										</strong>
+										<p class="m-t-5">
+											{{ review.comments }}
+										</p>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+							<div class="col-1"></div>
+							<div class="col-7">
+								<style>
+								.input-container {
+									display: -ms-flexbox; /* IE10 */
+									display: flex;
+									width: 100%;
+									margin-bottom: 15px;
+								}
+
+								.icon {
+									padding: 10px;
+									background: #4fb15c;
+									color: white;
+									min-width: 50px;
+									text-align: center;
+									border-top-left-radius: 10px;
+									border-bottom-left-radius: 10px;
+								}
+
+								.input-field {
+									width: 100%;
+									padding: 10px;
+									outline: none;
+									border: 1px solid #aaa;
+									border-top-right-radius: 10px;
+									border-bottom-right-radius: 10px;
+								}
+
+								.input-select {
+									width: 100%;
+									outline: none;
+									border: 1px solid #aaa;
+								}
+
+								.input-field:focus {
+									border: 1px solid #aaa !important;
+								}
+								</style>
+								<div class="row m-t-20">
+									<div class="col">
+										{% if review.status == 'R' %}
+										<form id="application_form" class="form-horizontal" action="/apply/" method="post">
+										{% endif %}
+												{% csrf_token %}
+												<input id="lat" type="hidden" name="lat">
+												<input id="lng" type="hidden" name="lng">
+												<fieldset>
+														<div class="input-container">
+															<i class="fa fa-arrow-right icon"></i></i>
+															{% if user.user_object.type == 'RE' %}
+															<input class="input-field" type="text" placeholder="Restaurant Name" name="company_name" value="{{user.user_object.restaurant.company_name}}" required>
+															{% elif user.user_object.type == 'PR' %}
+															<input class="input-field" type="text" placeholder="Program Name" name="program_name" value="{{user.user_object.program.program_name}}" required>
+															{% endif %}
+														</div>
+														<div class="input-container">
+															<i class="fas fa-map-marker-alt icon"></i>
+															{% if user.user_object.type == 'RE' %}
+															<input id="address" class="input-field" type="text" placeholder="Address" name="address" value="{{user.user_object.restaurant.address}}" required autocomplete="off">
+															{% elif user.user_object.type == 'PR' %}
+															<input id="address" class="input-field" type="text" placeholder="Address" name="address" value="{{user.user_object.program.address}}" required autocomplete="off">
+															{% endif %}
+														</div>
+														<div class="input-container">
+															<i class="fas fa-id-card icon"></i>
+															<input class="input-field" type="text" placeholder="Current Position/Title" name="position" value="{{user.user_object.position}}" required>
+														</div>
+														<div class="input-container">
+															<i class="fa fa-phone icon"></i></i>
+															<input class="input-field" type="text" placeholder="Your Phone Number" name="phone_number" pattern="\/.*\S.*\/|1?[\s-]?\.?\(?(\d{3})\)?\.?[\s-]?\d{3}[\s-]?\.?\d{4}" title="Enter your phone number" value="{{user.phone_number}}" required>
+														</div>
+														<div class="input-container">
+															<i class="fas fa-utensils icon"></i>
+															{% if user.user_object.type == 'RE' %}
+															<input class="input-field" type="number" placeholder="How many meals can you prepare?" name="meals" value="{{user.user_object.restaurant.meals}}" required>
+															{% elif user.user_object.type == 'PR' %}
+															<input class="input-field" type="number" placeholder="How many meals do you need?" name="meals" value="{{user.user_object.program.meals}}" required>
+															{% endif %}
+														</div>
+														{% if user.user_object.type == 'RE' %}
+														<div class="input-container">
+															<i class="fab fa-uber icon"></i>
+															<select id="uber_eats" name="uber_eats" class="selectpicker" title="Are you set up with uber eats?" data-width="100%" required>
+																<option value="True" {% if user.user_object.restaurant.uber_eats == True %}selected{% endif %}> Yes </option>
+																<option value="False" {% if user.user_object.restaurant.uber_eats == False %}selected{% endif %}> No </option>
+															</select>
+														</div>
+														<div class="input-container">
+															<i class="fa fa-bookmark icon"></i>
+															<input class="input-field" type="text" placeholder="Health & Safety Certificate Number" name="health_certificate" value="{{user.user_object.restaurant.health_certificate}}">
+														</div>
+														{% endif %}
+														{% if user.user_object.type == 'RE' %}
+														<div class="input-container">
+															<i class="fab fa-calendar icon"></i>
+															<select id="schedule_available" name="schedule_available" class="selectpicker" title="Are you available between 3 and 5pm?" data-width="100%" required>
+																<option value="True" {% if schedule.monday_start %}selected{% endif %}> Yes </option>
+																<option value="False" {% if not schedule.monday_start %}selected{% endif %}> No </option>
+															</select>
+														</div>
+														{% elif user.user_object.type == 'PR' %}
+														<div class="input-container">
+															<i class="fas fa-calendar icon"></i>
+															<select id="schedule" name="schedule" class="selectpicker" multiple data-actions-box="true" title="What days does the program run?" data-width="100%" required>
+																<option value="MO" {% if schedule.monday_start %}selected{% endif %}> Monday </option>
+																<option value="TU" {% if schedule.tuesday_start %}selected{% endif %}> Tuesday </option>
+																<option value="WE" {% if schedule.wednesday_start %}selected{% endif %}> Wednesday </option>
+																<option value="TH" {% if schedule.thursday_start %}selected{% endif %}> Thursday </option>
+																<option value="FR" {% if schedule.friday_start %}selected{% endif %}> Friday </option>
+															</select>
+														</div>
+														<div class="input-container m-t-20">
+															<i class="fas fa-clock icon"></i>
+															<input id="starttime" class="form-control input-field timepicker" name="start_time" placeholder="Select a delivery time" required autocomplete="off">
+														</div>
+														{% endif %}
+		                    </fieldset>
+												{% if review.status == 'R' %}
+												<div class="row m-t-20">
+													<div class="col text-center">
+														<button type="submit" class="btn btn-lg btn-success">Submit</button>
+													</div>
+												</div>
+
+		                </form>
+										{% endif %}
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+
+		<!-- Jquery JS -->
+		<script src="{% static "vendor/jquery-3.2.1.min.js" %}"></script>
+		<script src="{% static "vendor/bootstrap-select-1.13.9/popper.js" %}"></script>
+		<!-- Bootstrap JS -->
+		<script src="{% static "vendor/bootstrap-4.1/bootstrap.min.js" %}"></script>
+		<!-- Selectpicker -->]
+		<script src="{% static "vendor/bootstrap-select-1.13.9/js/bootstrap-select.min.js" %}"></script>
+		<script src="{% static "vendor/timepicker/1.3.5/jquery.timepicker.min.js" %}"></script>
+
+		<!-- Google Maps Autocomplete -->
+    <script src="{% static "js/google-maps-autocomplete.js" %}"></script>
+
+
+		<script type="text/javascript">
+			$('.timepicker').timepicker({
+						timeFormat: 'h:mm p',
+						interval: 60,
+						minTime: '7:00am',
+						maxTime: '6:00pm',
+						dynamic: false,
+						dropdown: true,
+						scrollbar: true,
+						zindex: 1060
+				});
+
+				time=null
+				{% if schedule.monday_start %}time='{{schedule.monday_start}}'{% endif %}
+				{% if schedule.tuesday_start %}time='{{schedule.tuesday_start}}'{% endif %}
+				{% if schedule.wednesday_start %}time='{{schedule.wednesday_start}}'{% endif %}
+				{% if schedule.thursday_start %}time='{{schedule.thursday_start}}'{% endif %}
+				{% if schedule.friday_start %}time='{{schedule.friday_start}}'{% endif %}
+				{% if schedule.saturday_start %}time='{{schedule.saturday_start}}'{% endif %}
+				{% if schedule.sunday_start %}time='{{schedule.sunday_start}}'{% endif %}
+
+				$(function() {
+				    $('#starttime').val(time)
+
+						{% if review.status == 'P' %}
+						$("input, select").prop("disabled", true);
+						{% endif %}
+				});
+
+		</script>
+
+	</body>
+</html>

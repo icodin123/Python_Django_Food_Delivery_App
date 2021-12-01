@@ -1,0 +1,182 @@
+{% extends "../base.html" %}
+
+	{% block head_title %}
+    	<title>Restaurant Profile</title>
+	{% endblock %}
+
+{% block body_block %}
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="overview-wrap">
+          <h1>{{ restaurant.company_name }}</h1>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="au-card">
+      <div class="row m-t-25">
+        <div class="col-md-6">
+          <p><strong>Main Contact</strong></p>
+        </div>
+        <div class="col-md-6">
+					<a href="{% url 'admin:user_profile' id=restaurant.main_contact.id %}">
+            <p>{{restaurant.main_contact.first_name}} {{restaurant.main_contact.last_name}}</p>
+					</a>
+        </div>
+      </div>
+      <div class="row m-t-25">
+        <div class="col-md-6">
+          <p><strong>Address</strong></p>
+        </div>
+        <div class="col-md-6">
+          <p class="school_address">{{restaurant.address}}</p>
+        </div>
+      </div>
+			<div class="row m-t-25">
+				<div class="col-md-6">
+					<p>
+						<strong>Latitude</strong>
+					</p>
+				</div>
+				<div class="col-md-6">
+					<p class="school_coordinates">{{restaurant.latitude}}</p>
+				</div>
+			</div>
+			<div class="row m-t-25">
+				<div class="col-md-6">
+					<p>
+						<strong>Longitude</strong>
+					</p>
+				</div>
+				<div class="col-md-6">
+					<p class="school_coordinates">{{restaurant.longitude}}</p>
+				</div>
+			</div>
+      <br>
+      <br>
+      <h3>User information</h3>
+      <hr>
+      <div class="row- m-t-25">
+            <form id="new_user_form" action="{% url 'admin:new_restaurant_contact' id=id %}" method="post">
+                 {% csrf_token %}
+                <div class="col-md-6">
+                  <div class="form-group purple-border">
+                    <label>Email</label>
+                      <input class="form-control" type="email" name="email" placeholder="Email" role="presentation" autocomplete="off">
+                    <label class="m-t-10">First name</label>
+                      <input class="form-control" type="text" name="first_name" placeholder="First Name" role="presentation" autocomplete="off">
+                    <label class="m-t-10">Last name</label>
+                      <input class="form-control" type="text" name="last_name" placeholder="Last Name" role="presentation" autocomplete="off">
+                  </div>
+                </div>
+
+                <br>
+
+                 <div class="col-md-6">
+                     <button type="submit" class="btn btn-primary">
+                       Create user
+                     </button>
+                 </div>
+            </form>
+        </div>
+    <br>
+    <br>
+    <div class='au-card'>
+  <div class="row m-t-25">
+    <div class="col-md-4">
+      <p><strong>Email</strong></p>
+    </div>
+    <div class="col-md-4">
+      <p class="restaurant_notes"><i>First name</i></p>
+    </div>
+    <div class="col-md-4">
+        <p class="restaurant_notes">Last name</p>
+      </div>
+  </div>
+  <hr>
+
+  {% for contact in contacts %}
+    <div class="row m-t-25">
+      <div class="col-md-4">
+				<a href="{% url 'admin:user_profile' id=contact.id %}">
+        	<p><strong>{{ contact.email }}</strong></p>
+				</a>
+      </div>
+      <div class="col-md-4">
+        <p class="restaurant_notes"><i>{{ contact.first_name }}</i></p>
+      </div>
+      <div class="col-md-4">
+        <p class="restaurant_notes"><i>{{ contact.last_name }}</i></p>
+      </div>
+
+    </div>
+  {% endfor %}
+
+      <br>
+      <br>
+      <h3>Notes</h3>
+      <hr>
+      <div class="row- m-t-25">
+
+
+            <form id="new_note_form" action="{% url 'admin:new_restaurant_note' id=id %}" method="post">
+                 {% csrf_token %}
+
+                <div class="col-md-6">
+                  <div class="form-group purple-border">
+                    <label>Note Name</label>
+                      <textarea placeholder="type note name here" name="note_name" class="form-control" rows="2"></textarea>
+                    <label>Note Content</label>
+                      <textarea placeholder="type note content here" name="note_content" class="form-control" rows="2"></textarea>
+                  </div>
+                </div>
+
+                 <div class="col-md-6">
+                     <button type="submit" class="btn btn-primary">
+                       Add Note
+                     </button>
+                 </div>
+
+            </form>
+
+        </div>
+        <br>
+        <div class='au-card'>
+      <div class="row m-t-25">
+        <div class="col-md-4">
+          <p><strong>note name</strong></p>
+        </div>
+        <div class="col-md-4">
+          <p class="restaurant_notes"><i>note content</i></p>
+        </div>
+        <div class="col-md-4">
+            <p class="restaurant_notes">created on</p>
+          </div>
+      </div>
+      <hr>
+
+      {% for note in notes %}
+        <div class="row m-t-25">
+          <div class="col-md-4">
+            <p><strong>{{ note.note_name }}</strong></p>
+          </div>
+          <div class="col-md-4">
+            <p class="restaurant_notes"><i>{{ note.note_content }}</i></p>
+          </div>
+          <div class="col-md-4">
+            <p class="restaurant_notes"><i>{{ note.created_at }}</i></p>
+          </div>
+
+        </div>
+    {% endfor %}
+
+
+        </div>
+
+    </div>
+  </div>
+
+
+{% endblock %}

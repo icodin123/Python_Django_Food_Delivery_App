@@ -1,0 +1,135 @@
+{% extends "../base.html" %}
+{% load staticfiles %}
+
+
+{% block head_title %}
+    <title>Settings</title>
+{% endblock %}
+
+{% block body_block %}
+<div class="section__content section__content--p30">
+        <div class="container-fluid">
+          <div class = "au-card">
+            <!-- PROFILE IMAGE FORM -->
+            <form method="post" enctype="multipart/form-data">
+                <div class="row- m-t-25">
+                    <div class="col-md-12">
+                        <h2 class="title-1">Update Profile Image</h2>
+                    </div>
+                </div>
+                <div class="row- m-t-25">
+                    <div class="col-md-2">
+                        <div class="image">
+                                <image src="{% static image_path %}" alt="Profile Image" />
+                                {% csrf_token %}
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <label for="uploadImage" class="m-t-10">Upload a new profile image</label>
+                        <input type="file" name="profile_image" class="form-control-file" id="uploadImage">
+                    </div>
+                </div>
+                <div class="row- m-t-25">
+                    <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary">Update Image</button>
+                    </div>
+                </div>
+            </form>
+            <!-- END PROFILE IMAGE FORM -->
+            <br>
+
+            <!-- NAME FORM -->
+            <form id="change_name_form" action="{% url "settings:settings_update_name" id=user.id %}" method="post">
+            {% csrf_token %}
+                <div class="row- m-t-25">
+                    <div class="col-md-12">
+                        <h2 class="title-1">Change Name</h2>
+                    </div>
+                </div>
+                <div class="row- m-t-25">
+                    <div class="form-group col-md-9">
+                        <label for="newEmail" >New First Name</label>
+                        <input type="text" name="newFirstName" class="form-control" id="newFirstName" placeholder="New First Name" value="{{user.first_name}}">
+                    </div>
+                    <div class="form-group col-md-9">
+                        <label for="newLastName" >New Last Name</label>
+                        <input type="text" name="newLastName" class="form-control" id="newLastName" placeholder="New Last Name" value="{{user.last_name}}">
+                    </div>
+                </div>
+                <div class="row- m-t-25">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary">Update Name</button>
+                    </div>
+                </div>
+            </form >
+            <!-- END NAME FORM -->
+            <br>
+            <!-- EMAIL FORM -->
+            <form id="change_email_form" action="{% url "settings:settings_update_email" id=user.id %}" method="post">
+              {% csrf_token %}
+                <div class="row- m-t-25">
+                    <div class="col-md-12">
+                        <h2 class="title-1">Change Email Address</h2>
+                    </div>
+                </div>
+                <div class="row- m-t-25">
+                    <div class="form-group col-md-9">
+                        <label for="newEmail">New Email Address</label>
+                        <input type="text" name="newEmail" class="form-control" id="newEmail" value="{{user.email}}">
+                    </div>
+                </div>
+                <div class="row- m-t-25">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary">Change Email</button>
+                    </div>
+                </div>
+            </form>
+            <!-- END EMAIL FORM -->
+            <br>
+            <!-- PASSWORD FORM -->
+            <form id="change_password_form" action="{% url "settings:settings_update_password" id=user.id %}" method="post">
+              {% csrf_token %}
+                <div class="row- m-t-25">
+                    <div class="col-md-12">
+                        <h2 class="title-1">Change Password</h2>
+                    </div>
+                </div>
+                <div class="row- m-t-25">
+                    <label for="oldPass" class="col-md-4 col-form-label">Current Password</label>
+                    <div class="col-md-4">
+                        <input type="password" name="oldPass" class="form-control" id="oldPass">
+                    </div>
+                </div>
+                <div class="row- m-t-25">
+                    <label for="newPass" class="col-md-4 col-form-label">New Password</label>
+                    <div class="col-md-4">
+                        <input type="password" name="newPass" class="form-control" id="newPass">
+                    </div>
+                </div>
+                <div class="row- m-t-25">
+                    <label for="newPassConfirm" class="col-md-4 col-form-label">Confirm New Password</label>
+                    <div class="col-md-4">
+                        <input type="password" name="confirmNewPass" class="form-control" id="newPassConfirm" >
+                    </div>
+                </div>
+                <div class="row- m-t-25">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+            <!-- END PASSWORD FORM -->
+          
+          </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+
+
+<!-- end document-->

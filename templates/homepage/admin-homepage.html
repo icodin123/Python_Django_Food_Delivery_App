@@ -1,0 +1,119 @@
+{% extends "../base.html" %}
+
+	{% block head_title %}
+    	<title>Dashboard</title>
+	{% endblock %}
+
+{% block body_block %}
+
+
+
+	<div class="row m-t-25">
+		<div class="col-sm-6 col-lg-3">
+				<div class="overview-item overview-item--c1">
+						<div class="overview__inner">
+								<div class="overview-box clearfix">
+										<div class="icon">
+												<i class="zmdi zmdi-mood"></i>
+										</div>
+										<div class="text">
+												<h2>{{ meal_count }}</h2>
+												<span>Meals Served</span>
+										</div>
+								</div>
+						</div>
+				</div>
+		</div>
+		<div class="col-sm-6 col-lg-3">
+				<div class="overview-item overview-item--c1">
+						<div class="overview__inner">
+								<div class="overview-box clearfix">
+										<div class="icon">
+												<i class="zmdi zmdi-cutlery"></i>
+										</div>
+										<div class="text">
+												<h2>{{ restaurant_count }}</h2>
+												<span>Restaurants</span>
+										</div>
+								</div>
+						</div>
+				</div>
+		</div>
+		<div class="col-sm-6 col-lg-3">
+				<div class="overview-item overview-item--c1">
+						<div class="overview__inner">
+								<div class="overview-box clearfix">
+										<div class="icon">
+												<i class="zmdi zmdi-developer-board"></i>
+										</div>
+										<div class="text">
+												<h2>{{ program_count }}</h2>
+												<span>Programs</span>
+										</div>
+								</div>
+						</div>
+				</div>
+		</div>
+		<div class="col-sm-6 col-lg-3">
+				<div class="overview-item overview-item--c1">
+						<div class="overview__inner">
+								<div class="overview-box clearfix">
+										<div class="icon">
+												<i class="zmdi zmdi-flare"></i>
+										</div>
+										<div class="text">
+												<h2>{{ application_count }}</h2>
+												<span>Applications</span>
+										</div>
+								</div>
+						</div>
+				</div>
+		</div>
+	</div>
+
+  <div class="row">
+      <div class="col-md-12">
+          <div class="overview-wrap">
+              <h2 class="title-1">Today's Schedule ({{todays_date}})</h2>
+          </div>
+      </div>
+  </div>
+
+  <div class="row m-t-25">
+      <div class="col-lg-12">
+          <div class="table-responsive table--no-card m-b-40">
+              <table id="todays-schedule" class="table table-borderless table-striped table-earning">
+                  <thead>
+                      <tr>
+                          <th>Program</th>
+                          <th>Restaurant</th>
+                          <th>Time</th>
+                          <th>Meals</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for schedule in daily_schedule %}
+                        <!-- [company_name, program_name, wekkday_start_time, company_owner_first_name,
+        # company_owner_last_name,  num_meals] -->
+                          <tr>
+                              <td>
+																<a href="{% url 'admin:program' id=schedule.7 %}">
+																	{{schedule.1}}
+																</a>
+															</td>
+                              <td>
+																<a href="{% url 'admin:restaurant' id=schedule.6 %}">
+																	{{schedule.0}}
+																</a>
+															</td>
+                              <td>{{schedule.2}}</td>
+                              <td>{{schedule.5}}</td>
+                          </tr>
+                      {% endfor%}
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,200 @@
+{% extends "../base.html" %}
+{% load staticfiles %}
+
+{% block head_title %}
+  <title>Restaurants List</title>
+
+
+{% endblock %}
+
+{% block body_block %}
+    <div class="row">
+        <div class="col-md-12">
+          <h2 class="title-1">Restaurants</h2>
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+          <div class="dropdown">
+              <input value="Add New Restaurant" type="button" id="addNewRestaurant" class="pull-right btn btn-primary"><span style="color:white;"></span></input>
+          </div>
+      </div>
+    </div>
+
+    <br>
+
+{% if restaurants %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive table--no-card m-b-40">
+                    <table
+                    id="RestaurantTable"
+                    class="table table-borderless table-striped table-earning"
+                    align="center"
+                    >
+                        <thead>
+                            <tr>
+                                <th>Restaurant Name</th>
+                                <th>Main Contact</th>
+                                <th>Phone Number</th>
+                                <th>Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for restaurant in restaurants %}
+                            <tr>
+                                <td>
+                                  <a href="{% url 'admin:restaurant' id=restaurant.id %}">
+                                    {{ restaurant.company_name }}
+                                  </a>
+                                </td>
+                                <td>
+                                  <a href="{% url 'admin:user_profile' id=restaurant.main_contact.id %}">
+                                    {{ restaurant.main_contact.first_name}} {{ restaurant.main_contact.last_name}}
+                                  </a>
+                                </td>
+                                <td>{{ restaurant.phone_number  }}</td>
+                                  <td>{{ restaurant.address  }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
+              <div id="addNewRestaurantCard" class="au-card" style="display: none;">
+
+                <!-- NAME FORM -->
+                <form id="change_name_form" action="{% url "admin:restaurants" %}" method="post">
+                  {% csrf_token %}
+                  <input id="lat" type="hidden" name="lat">
+                  <input id="lng" type="hidden" name="lng">
+                      <div class="row-">
+                          <div class="col-md-12">
+                              <h2 class="title-1">Create New Restaurant</h2>
+                          </div>
+                      </div>
+                      <div class="row- m-t-25">
+                          <input id="lat" type="hidden" name="lat">
+                          <input id="lng" type="hidden" name="lng">
+                          <div class="form-group col-md-6">
+                              <label for="contact_first_name">Main Contact First Name</label>
+                              <input type="text"  name="contact_first_name" class="form-control" id="contact_first_name" required>
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="contact_last_name" > Main Contact Last Name</label>
+                              <input type="text" name="contact_last_name" class="form-control" id="contact_last_name" required>
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="contact_email" >Main Contact Email</label>
+                              <input type="text" name="contact_email" class="form-control" id="contact_email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="contact_phone" >Main Contact Phone Number</label>
+                              <input type="text" name="contact_phone" class="form-control" id="contact_phone" required pattern="\/.*\S.*\/|1?[\s-]?\.?\(?(\d{3})\)?\.?[\s-]?\d{3}[\s-]?\.?\d{4}">
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="contact_position" >Main Contact Position/Title</label>
+                              <input type="text" name="contact_position" class="form-control" id="contact_position">
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="new_rest_name" >Restaurant Name</label>
+                              <input type="text" name="new_rest_name" class="form-control" id="new_rest_name" required>
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="new_rest_address" >Restaurant Address</label>
+                              <input type="text" name="new_rest_address" class="form-control" id="address" required>
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="new_rest_phone" >Restaurant Phone Number</label>
+                              <input type="text" name="new_rest_phone" class="form-control" id="new_rest_phone" required pattern="\/.*\S.*\/|1?[\s-]?\.?\(?(\d{3})\)?\.?[\s-]?\d{3}[\s-]?\.?\d{4}">
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="new_rest_meals" >Restaurant Maximum Number of Meals</label>
+                              <input type="text" name="new_rest_meals" class="form-control" id="new_rest_meals" required>
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="new_rest_uber" >Set up with uber eats?</label>
+                              <select id="new_rest_uber" name="new_rest_uber" class="selectpicker" title="Set up with uber eats?" data-width="100%" required autocomplete="off">
+                                <option value="True" selected> Yes </option>
+                                <option value="False"> No </option>
+                            </select>
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="new_rest_health_safety" >Health & Safety Certificate</label>
+                              <input class="form-control" type="text" name="new_rest_health_safety" required>
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="new_rest_schedule" >What days can they prepare meals?</label>
+                              <select id="new_rest_schedule" name="new_rest_schedule" class="selectpicker" multiple data-actions-box="false" title="Select days" data-width="100%" required>
+                                <option value="MO"> Monday </option>
+                                <option value="TU"> Tuesday </option>
+                                <option value="WE"> Wednesday </option>
+                                <option value="TH"> Thursday </option>
+                                <option value="FR"> Friday </option>
+                            </select>
+                          </div>
+                          <div class="form-group col-md-6"">
+                             <label for="new_rest_start_time" >Select a delivery time</label>
+                             <input id="new_rest_start_time" class="form-control input-field timepicker" name="new_rest_start_time" required autocomplete="off">
+                          </div>
+                      </div>
+                      <br>
+                      <div class="row- m-t-25">
+                          <div class="col-md-12">
+                              <input type="button" id="new-restaurant-back" class="btn btn-danger" value="Back">
+                              <button type="submit" class="btn btn-success id="newRestaurantSubmit"">Create & Approve</button>
+                          </div>
+                      </div>
+                </form >
+                <!-- END NAME FORM -->
+              </div>
+{% endblock %}
+
+{% block javascript_block %}
+<script type="text/javascript">
+  $('.timepicker').timepicker({
+    timeFormat: 'h:mm p',
+    interval: 60,
+    minTime: '7:00am',
+    maxTime: '6:00pm',
+    dynamic: false,
+    dropdown: true,
+    scrollbar: true,
+    zindex: 1060
+  });
+</script>
+
+
+<script>
+
+  $("#addNewRestaurant").on('click', function(e) {
+    $("#RestaurantTable").hide("fast");
+    $("#addNewRestaurant").hide("fast");
+    $("#addNewRestaurantCard").show("fast");
+  });
+
+    $("#newRestaurantSubmit").on('click', function(e) {
+        $("#addNewRestaurantCard").hide("fast");
+        $("#RestaurantTable").show("fast");
+        $("#addNewRestaurant").show("fast");
+  });
+
+    $("#new-restaurant-back").on('click', function(e) {
+        $("#addNewRestaurantCard").hide("fast");
+        $("#RestaurantTable").show("fast");
+        $("#addNewRestaurant").show("fast");
+  });
+
+</script>
+
+<!-- Google Maps Autocomplete -->
+<script src="{% static "js/google-maps-autocomplete.js" %}"></script>
+
+{% endblock %}
+
+<!-- end document-->

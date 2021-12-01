@@ -1,0 +1,62 @@
+{% extends "../base.html" %}
+{% load staticfiles %}
+  {% block head_title %}
+      <title>Resources Page</title>
+  {% endblock %}
+
+  {% block body_block %}
+		<div class="row">
+			<div class="col-md-12">
+              <h2 class="title-1">Documents</h2>
+			</div>
+		</div>
+		<hr />
+
+    {% if documents %}
+      <div class="row m-t-25">
+        <div class="col-lg-12">
+          <div class="table-responsive table--no-card m-b-40">
+            <table
+              class="table table-borderless table-striped table-earning"
+              align="center"
+            >
+              <thead>
+                <tr>
+                  <th>Resource Name</th>
+                  <th>Date Uploaded</th>
+                  <th>Document FilePath</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for document in documents %}
+                  <tr>
+                    <td>{{ document.name}}</td>
+                    <td>{{ document.created_at}}</td>
+                    <td>{{ document.document_type}}</td>
+                    <td>
+                      {% if document.filepath %}
+                        <form
+                        action="{{ document.filepath}}"
+                        method="get"
+                        target="_blank"
+                        >
+                          <button type="submit" class="btn btn-primary">
+                            View Resource
+                          </button>
+                        </form>
+                      {% else %}
+                        No Link
+                      {% endif %}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    {% else %}
+        <h4>no resource :(</h4>
+    {% endif %}
+  {% endblock %}
+

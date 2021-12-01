@@ -1,0 +1,242 @@
+{% extends "../base.html" %}
+{% load staticfiles %}
+
+
+{% block head_title %}
+    <title>Review Request</title>
+{% endblock %}
+
+{% block body_block %}
+    <div class="row">
+        <div class="col-md-12">
+          <h2 class="title-1">Review Request</h2>
+        </div>
+    </div>
+    <br>
+
+{% if request_review %}
+                <div id="optionsCard" class="au-card">
+                   <div class="row">
+                      <div class="col-md-4">
+                        <p><strong>Requested by: </strong></p>
+                      </div>
+                        <div class="col-md-6">
+                            <p>
+                              <a target="_blank" href="{% url 'admin:user_profile' id=request_review.request_id.user_id.id %}">
+                                {{ request_review.request_id.user_id.first_name }} {{ request_review.request_id.user_id.last_name }}
+                              </a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row m-t-25">
+                      <div class="col-md-4">
+                        <p><strong>Requested on:</strong></p>
+                      </div>
+                      <div class="col-md-6">
+                        <p class="school_point_contact">{{ request_review.created_at }}</p>
+                      </div>
+                    </div>
+
+
+                  {% if request_review.request_id.request_type == "SC" %}
+
+                    <br>
+
+                    <div class="row m-t-25">
+                      <div class="col-md-6">
+                        <p><strong>Wants schedule to be changed to the following:</strong></p>
+                      </div>
+                    </div>
+
+                    <br>
+
+                    <div class="table-responsive table--no-card m-b-40">
+                        <table
+                          class="table table-borderless table-striped table-earning"
+                          align="center"
+                        >
+                          <thead>
+                            <tr>
+                              <th></th>
+                              <th>Monday</th>
+                              <th>Tuesday</th>
+                              <th>Wednesday</th>
+                              <th>Thursday</th>
+                              <th>Friday</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+							<tr>
+							    <td> Start time </td>
+
+
+                                {% if request_review.request_id.schedule_id.monday_start != None %}
+                                    <td> {{ request_review.request_id.schedule_id.monday_start }} </td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
+
+                                {% if request_review.request_id.schedule_id.tuesday_start != None %}
+                                    <td> {{ request_review.request_id.schedule_id.tuesday_start }} </td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
+
+                                {% if request_review.request_id.schedule_id.wednesday_start != None %}
+                                    <td> {{ request_review.request_id.schedule_id.wednesday_start}} </td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
+
+                                {% if request_review.request_id.schedule_id.thursday_start != None %}
+                                    <td> {{ request_review.request_id.schedule_id.thursday_start }} </td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
+
+                                {% if request_review.request_id.schedule_id.friday_start != None %}
+                                    <td> {{ request_review.request_id.schedule_id.friday_start }} </td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
+
+
+							</tr>
+                          	<tr>
+							    <td> End time </td>
+
+                                {% if request_review.request_id.schedule_id.monday_end != None %}
+                                    <td> {{ request_review.request_id.schedule_id.monday_end }} </td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
+
+                                {% if request_review.request_id.schedule_id.tuesday_end != None %}
+                                    <td> {{ request_review.request_id.schedule_id.tuesday_end }} </td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
+
+                                {% if request_review.request_id.schedule_id.wednesday_end != None %}
+                                    <td> {{ request_review.request_id.schedule_id.wednesday_end }} </td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
+
+                                {% if request_review.request_id.schedule_id.thursday_end != None %}
+                                    <td> {{ request_review.request_id.schedule_id.thursday_end }} </td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
+
+                                {% if request_review.request_id.schedule_id.friday_end != None %}
+                                    <td> {{ request_review.request_id.schedule_id.friday_end }} </td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
+
+
+							</tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {% else %}
+
+                    <br>
+
+                    <div class="row m-t-25">
+                      <div class="col-md-6">
+                        <p><strong>Request information:</strong></p>
+                      </div>
+                    </div>
+
+                    <br>
+
+                    <div id="optionsCard" class="card text-dark bg-light" style="padding:5px;min-height: 50px;">
+                     <p>{{ request_review.request_id.request_change }}</p>
+                    </div>
+
+                  {% endif %}
+
+                  <br>
+
+			     <form id="acceptForm" action="{% url 'admin:accept_request' id=id %}" method="post">
+				     {% csrf_token %}
+
+                     <div class="row">
+                         <div class="col-sm-12 text-center">
+                             <input id='denyButton' type="button" class="btn btn-outline-danger float-left" value="Deny">
+                             <input type='submit' class="btn btn-outline-success float-right" value="Accept">
+                         </div>
+                     </div>
+			    </form>
+              </div>
+
+
+
+              <div id="commentCard" class="au-card" style="display: none;">
+                  <div class="row">
+                    <div class="col-md-12">
+
+            			     <form id="denyForm" action="{% url 'admin:deny_request' id=id %}" method="post">
+            				     {% csrf_token %}
+
+                                 <h3>Deny Request</h3>
+
+                                 <br>
+
+                                <textarea name="comment" placeholder="Please enter the reason for denial here..." class="form-control" rows="5" id="comment"></textarea>
+
+                                <br>
+                                <br>
+
+                                 <div class="row text-center">
+                                     <div class="col-12">
+                                        <input id='backButton' type='button' class="btn btn-outline-danger" value="Back">
+                                         <input type="submit" class="btn btn-outline-success m-l-25" value="Send">
+                                     </div>
+                                 </div>
+            			    </form>
+              </div>
+
+
+
+            </div>
+
+
+
+
+{% else %}
+  <h4>no request :(</h4>
+{% endif %}
+
+
+{% endblock %}
+
+{% block javascript_block %}
+
+
+		<script>
+
+
+			$("#denyButton").on('click', function(e) {
+				$("#optionsCard").hide("fast");
+				$("#commentCard").show("fast");
+			});
+
+			$("#backButton").on('click', function(e) {
+				$("#optionsCard").show("fast");
+				$("#commentCard").hide("fast");
+			});
+
+
+		</script>
+
+
+
+{% endblock %}
+
+
+
+<!-- end document-->

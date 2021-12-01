@@ -1,0 +1,181 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<!-- Favicon -->
+		<link rel="icon" href="{% static "images/icon/favicon32.jpg" %}" sizes="32x32">
+		<link rel="icon" href="{% static "images/icon/favicon192.jpg" %}" sizes="192x192">
+
+		<!-- meta tags-->
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="Feeding Canadian Kids">
+		<meta name="author" content="Feeding Canadian Kids">
+		<meta name="keywords" content="Feeding Canadian Kids">
+
+		<!-- Title Page-->
+		<title>Sign Up</title>
+
+		<link href="{% static "vendor/font-awesome-4.7/css/font-awesome.min.css" %}" rel="stylesheet" media="all">
+		<link href="{% static "vendor/font-awesome-5/css/fontawesome-all.min.css" %}" rel="stylesheet" media="all">
+
+		<!-- Bootstrap CSS -->
+		<link href="{% static "vendor/bootstrap-4.1/bootstrap.min.css"%}" rel="stylesheet" media="all">
+		<link href="{% static "vendor/bootstrap-select-1.13.9/css/bootstrap-select.min.css" %}" rel="stylesheet" media="all">
+
+		<!-- Main CSS-->
+		<link href="{% static "css/main.css" %}" rel="stylesheet" media="all">
+		<link rel="stylesheet" type="text/css" href="{% static "css/signup-login.css" %}">
+
+		<link href="{% static "css/signup-login.css" %}" rel="stylesheet" media="all">
+
+	</head>
+
+	<body>
+
+		<div class="limiter">
+			<div class="container-login">
+				<div class="wrap-login">
+					<div class="login-pic js-tilt" data-tilt="">
+						<img src="{% static "images/logo.png" %}" alt="Feeding Canadian Kids">
+					</div>
+					<div class="login-pic js-tilt-cartoon m-t-20" data-tilt="">
+						<img src="{% static "images/cartoon.png" %}" alt="Feeding Canadian Kids">
+					</div>
+
+					<form id="signup-form" action="{% url 'profiles:register' %}" enctype="multipart/form-data" method="post" class="login-form validate-form">
+						{% csrf_token %}
+						<span class="login-form-title">
+							Sign Up
+						</span>
+
+						<div class="wrap-input validate-input" data-validate="First name is required">
+							<input class="input" type="text" name="first_name" placeholder="First Name" role="presentation" autocomplete="off">
+							<span class="focus-input"></span>
+							<span class="symbol-input">
+								<strong>F</strong>
+							</span>
+						</div>
+
+						<div class="wrap-input validate-input" data-validate="Last name is required">
+							<input class="input" type="text" name="last_name" placeholder="Last Name" role="presentation" autocomplete="off">
+							<span class="focus-input"></span>
+							<span class="symbol-input">
+								<strong>L</strong>
+							</span>
+						</div>
+
+						<div class="wrap-input validate-input" data-validate="Valid email is required: example@fck.org">
+							<input class="input" type="text" name="email" placeholder="Email" role="presentation" autocomplete="off">
+							<span class="focus-input"></span>
+							<span class="symbol-input">
+								<i class="fa fa-envelope" aria-hidden="true"></i>
+							</span>
+						</div>
+
+						<div class="wrap-input validate-input" data-validate="Password is required">
+							<input class="input" type="password" name="password" placeholder="Password">
+							<span class="focus-input"></span>
+							<span class="symbol-input">
+								<i class="fa fa-lock" aria-hidden="true"></i>
+							</span>
+						</div>
+
+
+
+
+
+
+						<div class="wrap-input m-t-5">
+							<select name="type" form="signup-form" class="selectpicker" width="100">
+							  <option value="RE">Restaurant</option>
+							  <option value="PR">Program</option>
+							</select>
+						</div>
+
+
+
+
+
+						<div class="container-login-form-btn">
+							<button class="login-form-btn">
+								Sign Up
+							</button>
+							<p class="m-t-5"> Already a user? <span id="login-link" class="link"> Log In </span></p>
+						</div>
+
+					</form>
+
+
+
+					<form id="login-form" action="{% url 'profiles:user_login' %}" method="post" class="login-form validate-form" style="display: none;">
+						{% csrf_token %}
+						<span class="login-form-title">
+							Login
+						</span>
+
+						<div class="wrap-input validate-input" data-validate="Valid email is required: example@fck.org">
+							<input class="input" type="text" name="email" placeholder="Email" role="presentation" autocomplete="off">
+							<span class="focus-input"></span>
+							<span class="symbol-input">
+								<i class="fa fa-envelope" aria-hidden="true"></i>
+							</span>
+						</div>
+
+						<div class="wrap-input validate-input" data-validate="Password is required">
+							<input class="input" type="password" name="password" placeholder="Password">
+							<span class="focus-input"></span>
+							<span class="symbol-input">
+								<i class="fa fa-lock" aria-hidden="true"></i>
+							</span>
+						</div>
+
+						<div class="container-login-form-btn">
+							<button class="login-form-btn">
+								Login
+							</button>
+							<p class="m-t-5"> Don't have an account? <span id="signup-link" class="link"> Sign Up </span></p>
+							<p><a href="{% url "password_reset" %}">Forgot your password?</a></p>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- Jquery JS -->
+		<script src="{% static "vendor/jquery-3.2.1.min.js" %}"></script>
+		<script src="{% static "vendor/bootstrap-select-1.13.9/popper.js" %}"></script>
+		<!-- Bootstrap JS -->
+		<script src="{% static "vendor/bootstrap-4.1/bootstrap.min.js" %}"></script>
+		<!-- Animation -->
+		<script src="{% static "vendor/animsition/animsition.min.js" %}"></script>
+
+		<!--Tilt JS-->
+		<script src="{% static "vendor/tilt/tilt.jquery.min.js" %}" ></script>
+
+		<script src="{% static "vendor/bootstrap-select-1.13.9/js/bootstrap-select.min.js" %}"></script>
+
+		<script>
+			$('.js-tilt').tilt({
+				scale: 1.1
+			})
+
+			$('.js-tilt-cartoon').tilt({
+				scale: 0.9
+			})
+
+			$("#login-link").on('click', function(e) {
+				$("#signup-form").hide("fast");
+				$("#login-form").show("fast");
+			});
+
+			$("#signup-link").on('click', function(e) {
+				$("#signup-form").show("fast");
+				$("#login-form").hide("fast");
+			});
+		</script>
+
+	</body>
+</html>

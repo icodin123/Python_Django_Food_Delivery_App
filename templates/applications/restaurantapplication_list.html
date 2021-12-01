@@ -1,0 +1,48 @@
+{% extends "../base.html" %}
+
+	{% block head_title %}
+    	<title>Applicationss Page</title>
+	{% endblock %}
+
+	{% block body_block %}
+
+		{% block preapplication %}
+<div class="row"></div>
+			<div class="col-md-4">
+				<div class="content">
+					{% if user.is_authenticated %}
+					<h2>
+						Welcome back
+					</h2>
+
+				{% endif %}
+						<h2>Your pairing requests</h2>
+
+						<p></p>
+				</div>
+				{% if user.is_authenticated %}
+				<a href="{% url 'applications:create-restaurant' %}" class="btn btn-md btn-fill btn-warning"><span class="glyphicon glyphicon-plus-sign"></span>Create new pairing request</a>
+				{% endif %}
+			</div>
+			{% endblock %}
+
+			{% block application_content %}
+			<div class="col-md-8">
+				<div class="list-application">
+					{% for application in restaurantapplication_list %}
+
+						<div class="list-application-item-text container-fluid">
+							Your message: {{ application.letter }}
+							<div class="row">
+								<div class="col-md-4">
+									<span class="badge">{{ application.user.username }}</span> {{ application.members.count|pluralize }}
+								</div>
+							</div>
+						</div>
+
+					{% endfor %}
+				</div>
+			</div>
+</div>
+		{% endblock %}
+	{% endblock %}

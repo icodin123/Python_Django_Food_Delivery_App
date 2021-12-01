@@ -1,0 +1,484 @@
+{% extends "../base.html" %}
+
+	{% block head_title %}
+    	<title>Pairings</title>
+	{% endblock %}
+
+
+
+{% block body_block %}
+    <div class="row">
+        <div class="col-md-12">
+          <h2 class="title-1">Pairings</h2>
+        </div>
+    </div>
+    <br>
+        <div id="pairingsListCard" class="au-card">
+
+                    <form id="remove_pairing_form" class="form-horizontal" action="{% url 'admin:delete_pairing' %}" method="post">
+                    {% csrf_token %}
+		  	        <input type="hidden" id="pairing_id" name="pairing_id" value="-1">
+
+                <div class="row">
+                  <div class="col-sm-12 text-center">
+                    <button type="submit" id="removePairingButton" class="pull-right btn btn-danger" disabled><span style="color:white;">Remove Pairing</span></button>
+                    <input value="Add pairing" type="button" id="addPairingButton" class="pull-right btn btn-primary m-r-10">
+
+                  </div>
+                 </div>
+
+					<div class="row">
+						<div class="col-md-12">
+							<div class="overview-wrap">
+
+								<div class="col-sm-4"></div>
+								<div class="col-md-3">
+								<div class="pull-right button-group">
+								</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row m-t-25">
+						<div class="col-lg-12">
+							<div class="table-responsive table--no-card m-b-40">
+								<table id="existingPairings"
+								class="table table-borderless table-striped table-earning"
+								align="center"
+								>
+									<thead>
+										<tr>
+											<th>Program name</th>
+											<th>Restaurant name</th>
+											<th>Schedule</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for pairing in pairings %}
+										<tr id="{{ pairing.id }}">
+											<td>
+                        <a target="_blank" href="{% url 'admin:program' id=pairing.program_id.id %}">
+                          {{ pairing.program_id.program_name }}
+                        </a>
+                      </td>
+											<td>
+                        <a target="_blank" href="{% url 'admin:restaurant' id=pairing.restaurant_id.id %}">
+                          {{ pairing.restaurant_id.company_name }}
+                        </a>
+                      </td>
+											  <td>
+
+												{% if pairing.program_id.schedule.sunday_start != None %}
+													<span style="color:red; font-weight:600;">S</span>
+												{% else %}
+													<span style="color:black; font-weight:600;">S</span>
+												{% endif %}
+
+												{% if pairing.program_id.schedule.monday_start != None %}
+													<span style="color:red; font-weight:600;">M</span>
+												{% else %}
+													<span style="color:black; font-weight:600;">M</span>
+												{% endif %}
+
+												{% if pairing.program_id.schedule.tuesday_start != None %}
+													<span style="color:red; font-weight:600;">T</span>
+												{% else %}
+													<span style="color:black; font-weight:600;">T</span>
+												{% endif %}
+
+												{% if pairing.program_id.schedule.wednesday_start != None %}
+													<span style="color:red; font-weight:600;">W</span>
+												{% else %}
+													<span style="color:black; font-weight:600;">W</span>
+												{% endif %}
+
+												{% if pairing.program_id.schedule.thursday_start != None %}
+													<span style="color:red; font-weight:600;">T</span>
+												{% else %}
+													<span style="color:black; font-weight:600;">T</span>
+												{% endif %}
+
+												{% if pairing.program_id.schedule.friday_start != None %}
+													<span style="color:red; font-weight:600;">F</span>
+												{% else %}
+													<span style="color:black; font-weight:600;">F</span>
+												{% endif %}
+
+												{% if pairing.program_id.schedule.saturday_start != None %}
+													<span style="color:red; font-weight:600;">S</span>
+												{% else %}
+													<span style="color:black; font-weight:600;">S</span>
+												{% endif %}
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+            </form>
+
+        </div>
+
+
+
+
+        <div id="addPairingCard" class="au-card" style="display: none;">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="overview-wrap">
+
+                        <div class="col-sm-4"></div>
+                        <div class="col-md-3">
+                            <button id="backButton" class="btn btn-primary"><span style="color:white;">Back</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        <form id="pairing_form" class="form-horizontal" action="{% url 'admin:new_pairing' %}" method="post">
+            {% csrf_token %}
+			<input type="hidden" id="program_id" name="program_id" value="-1">
+
+			<input type="hidden" id="restaurant_id" name="restaurant_id" value="-1">
+
+            <p class="title-2">Programs:</p>
+
+
+            <div class="row m-t-25">
+                <div class="col-lg-12">
+
+                        <div class="row m-t-25">
+                            <div class="col-lg-12">
+                                <div class="table-responsive m-b-40">
+                                    <table id="addPairingPartner" class="table table-borderless table-striped table-earning table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Program Name</th>
+                                            <th>Main Contact</th>
+                                            <th>Phone Number</th>
+                                            <th>Address</th>
+                                            <th>Schedule</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for program in programs %}
+                                        <tr id="{{program.id}}" >
+                                            <span id="{{program.id}}-lat" style="display:none">{{program.latitude}}</span>
+                                            <span id="{{program.id}}-lng" style="display:none">{{program.longitude}}</span>
+                                            <td>{{ program.program_name }}</td>
+                                            <td>{{ program.main_contact.first_name}}</td>
+                                            <td>{{ program.phone_number  }}</td>
+                                            <td>{{ program.address  }}</td>
+                                            <td>
+
+                                                {% if program.schedule.sunday_start != None %}
+                                                    <span style="color:red; font-weight:600;">S</span>
+                                                {% else %}
+                                                    <span style="color:black; font-weight:600;">S</span>
+                                                {% endif %}
+
+                                                {% if program.schedule.monday_start != None %}
+                                                    <span style="color:red; font-weight:600;">M</span>
+                                                {% else %}
+                                                    <span style="color:black; font-weight:600;">M</span>
+                                                {% endif %}
+
+                                                {% if program.schedule.tuesday_start != None %}
+                                                    <span style="color:red; font-weight:600;">T</span>
+                                                {% else %}
+                                                    <span style="color:black; font-weight:600;">T</span>
+                                                {% endif %}
+
+                                                {% if program.schedule.wednesday_start != None %}
+                                                    <span style="color:red; font-weight:600;">W</span>
+                                                {% else %}
+                                                    <span style="color:black; font-weight:600;">W</span>
+                                                {% endif %}
+
+                                                {% if program.schedule.thursday_start != None %}
+                                                    <span style="color:red; font-weight:600;">T</span>
+                                                {% else %}
+                                                    <span style="color:black; font-weight:600;">T</span>
+                                                {% endif %}
+
+                                                {% if program.schedule.friday_start != None %}
+                                                    <span style="color:red; font-weight:600;">F</span>
+                                                {% else %}
+                                                    <span style="color:black; font-weight:600;">F</span>
+                                                {% endif %}
+
+                                                {% if program.schedule.saturday_start != None %}
+                                                    <span style="color:red; font-weight:600;">S</span>
+                                                {% else %}
+                                                    <span style="color:black; font-weight:600;">S</span>
+                                                {% endif %}
+
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <p class="title-2">Restaurants:</p>
+                     <br>
+
+                    <div class="row m-t-25">
+                        <div class="col-lg-12">
+                            <div class="table-responsive table--no-card m-b-40">
+                                <table id="addPairingRestaurant"
+                                class="table table-borderless table-striped table-earning"
+                                align="center"
+                                >
+                                    <thead>
+                                        <tr>
+                                            <th style="display:none">id</th>
+                                            <th style="display:none">lat</th>
+                                            <th style="display:none">lng</th>
+                                            <th>Company Name</th>
+                                            <th>Main Contact</th>
+                                            <th>Phone Number</th>
+                                            <th>Address</th>
+                                            <th>Schedule</th>
+                                            <th>Distance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for restaurant in restaurants %}
+                                        <tr id="{{restaurant.id}}">
+                                            <td style="display:none">{{restaurant.id}}</td>
+                                            <td style="display:none">{{restaurant.latitude}}</td>
+                                            <td style="display:none">{{restaurant.longitude}}</td>
+                                            <td>{{ restaurant.company_name }}</td>
+                                            <td>{{ restaurant.main_contact.first_name}}</td>
+                                            <td>{{ restaurant.phone_number  }}</td>
+                                            <td>{{ restaurant.address  }}</td>
+                                            <td>
+
+                                                {% if restaurant.schedule.sunday_start != None %}
+                                                    <span style="color:red; font-weight:600;">S</span>
+                                                {% else %}
+                                                    <span style="color:black; font-weight:600;">S</span>
+                                                {% endif %}
+
+                                                {% if restaurant.schedule.monday_start != None %}
+                                                    <span style="color:red; font-weight:600;">M</span>
+                                                {% else %}
+                                                    <span style="color:black; font-weight:600;">M</span>
+                                                {% endif %}
+
+                                                {% if restaurant.schedule.tuesday_start != None %}
+                                                    <span style="color:red; font-weight:600;">T</span>
+                                                {% else %}
+                                                    <span style="color:black; font-weight:600;">T</span>
+                                                {% endif %}
+
+                                                {% if restaurant.schedule.wednesday_start != None %}
+                                                    <span style="color:red; font-weight:600;">W</span>
+                                                {% else %}
+                                                    <span style="color:black; font-weight:600;">W</span>
+                                                {% endif %}
+
+                                                {% if restaurant.schedule.thursday_start != None %}
+                                                    <span style="color:red; font-weight:600;">T</span>
+                                                {% else %}
+                                                    <span style="color:black; font-weight:600;">T</span>
+                                                {% endif %}
+
+                                                {% if restaurant.schedule.friday_start != None %}
+                                                    <span style="color:red; font-weight:600;">F</span>
+                                                {% else %}
+                                                    <span style="color:black; font-weight:600;">F</span>
+                                                {% endif %}
+
+                                                {% if restaurant.schedule.saturday_start != None %}
+                                                    <span style="color:red; font-weight:600;">S</span>
+                                                {% else %}
+                                                    <span style="color:black; font-weight:600;">S</span>
+                                                {% endif %}
+
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                                        <div class="input-container">
+                                            <i class="fas fa-calendar icon"></i>
+                                            <select id="schedule" name="schedule" class="selectpicker" multiple data-actions-box="true" title="What days are required?" data-width="100%" required>
+                                                <option value="MO"> Monday </option>
+                                                <option value="TU"> Tuesday </option>
+                                                <option value="WE"> Wednesday </option>
+                                                <option value="TH"> Thursday </option>
+                                                <option value="FR"> Friday </option>
+                                                <option value="SA"> Saturday </option>
+                                                <option value="SU"> Sunday </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="input-container m-t-20">
+                                            <i class="fas fa-clock icon"></i>
+                                            <input id="starttime" class="form-control input-field timepicker" name="start_time" placeholder="Select a start time" required
+                                                   autocomplete="off">
+                                        </div>
+
+                                        <div class="input-container m-t-20">
+                                            <i class="fas fa-utensils icon"></i>
+                                            <input id="meals" type="number" min="1" class="form-control input-field" name="meals" placeholder="How many meals in this pairing?" required autocomplete="off">
+                                        </div>
+
+                                <div class="row m-t-20">
+                                    <div class="col text-center">
+                                        <button type="submit" class="btn btn-lg btn-success">Submit</button>
+                                    </div>
+                                </div>
+		                    </form>
+
+                        </div>
+{% endblock %}
+
+{% block javascript_block %}
+
+		<script type="text/javascript">
+			$('.timepicker').timepicker({
+						timeFormat: 'h:mm p',
+						interval: 60,
+						minTime: '7:00am',
+						maxTime: '6:00pm',
+						dynamic: false,
+						dropdown: true,
+						scrollbar: true,
+						zindex: 1060
+				});
+		</script>
+
+		<script>
+		 $("#addPairingButton").on('click', function(e) {
+				 $("#pairingsListCard").hide("fast");
+				 $("#addPairingCard").show("fast");
+		 });
+
+		 $("#backButton").on('click', function(e) {
+		     $("#addPairingCard").hide("fast");
+				 $("#pairingsListCard").show("fast");
+		 });
+
+     var partner_chosen = false;
+     var partner_lat = null;
+     var partner_lng = null;
+     var restaurant_chosen = false;
+
+     $(document).ready( function () {
+         // Initialize DataTables
+         var partner_table = $('#addPairingPartner').DataTable( {
+             "paging": false,
+         } );
+         var restaurant_table = $('#addPairingRestaurant').DataTable( {
+             "paging": false,
+         } );
+         var existing_pairings = $('#existingPairings').DataTable( {
+             "paging": false,
+         } );
+
+         // Make it possible to select rows from the tables
+         $('#addPairingPartner').on( 'click', 'tr', function () {
+             if ( $(this).hasClass('selected') ) {
+                 $(this).removeClass('selected');
+                 partner_chosen = false;
+                 updatePairButton();
+             }
+             else {
+                 partner_table.$('tr.selected').removeClass('selected');
+                 partner_row = $(this);
+                 partner_row.addClass('selected');
+                 partner_id = partner_row.attr('id');
+                 partner_lat = document.getElementById(partner_id + "-lat").innerHTML;
+                 partner_lng = document.getElementById(partner_id + "-lng").innerHTML;
+                 partner_chosen = true;
+                 updatePairButton();
+
+                 let val = $('#addPairingPartner tbody tr.selected').attr('id')
+                 $('#program_id').val(val)
+             }
+         } );
+         $('#addPairingRestaurant').on( 'click', 'tr', function () {
+             if ( $(this).hasClass('selected') ) {
+                 $(this).removeClass('selected');
+                 restaurant_chosen = false;
+                 updatePairButton();
+             }
+             else {
+                 restaurant_table.$('tr.selected').removeClass('selected');
+                 $(this).addClass('selected');
+                 restaurant_chosen = true;
+                 updatePairButton();
+
+                 let val = $('#addPairingRestaurant tbody tr.selected').attr('id')
+                 $('#restaurant_id').val(val)
+             }
+         } );
+         $('#existingPairings').on( 'click', 'tr', function () {
+             if ( $(this).hasClass('selected') ) {
+                 $(this).removeClass('selected');
+                 pairing_chosen = false
+                 updatePairButton();
+             }
+             else {
+                 existing_pairings.$('tr.selected').removeClass('selected');
+                 $(this).addClass('selected');
+
+                 let val = $('#existingPairings tbody tr.selected').attr('id')
+
+                 $('#pairing_id').val(val)
+                 $('#removePairingButton').prop('disabled', false)
+             }
+         } );
+         function updatePairButton () {
+             // Decide if a pairing has been selected
+             if (partner_chosen && restaurant_chosen) {
+                 $("#pairButton").prop('disabled', false);
+             } else {
+                 $("#pairButton").prop('disabled', true);
+             }
+             if (partner_chosen) {
+                 // Update distances to chosen program
+                 restaurant_table.rows().every( function(rowi, tableLoop, rowLoop) {
+                     var data = this.data();
+                     var cell = restaurant_table.cell({
+                         row: rowi,
+                         column: 8});
+                     var restaurant_lat = data[1];
+                     var restaurant_lng = data[2];
+                     var origin = new google.maps.LatLng(partner_lat, partner_lng);
+                     var destination = new google.maps.LatLng(restaurant_lat, restaurant_lng);
+                     var service = new google.maps.DistanceMatrixService();
+                     service.getDistanceMatrix({
+                         origins: [origin],
+                         destinations: [destination],
+                         travelMode: 'DRIVING',
+                     }, callback);
+
+                     function callback(response, status) {
+                         if (status == 'OK') {
+                             var distance = response.rows[0].elements[0].distance.text;
+                             // Set distance value in distance column
+                             cell.data(distance).draw();
+                         }
+                     }
+                 });
+                 restaurant_table.order([8, 'asc']).draw();
+             }
+         };
+     } );
+		</script>
+{% endblock %}

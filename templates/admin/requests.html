@@ -1,0 +1,79 @@
+{% extends "../base.html" %}
+
+	{% block head_title %}
+    	<title>Requests</title>
+	{% endblock %}
+
+{% block body_block %}
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="overview-wrap">
+                    <div class="col-md-6">
+                      <h2 class="title-1">Review Requests</h2>
+                    </div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-md-3">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="row m-t-25">
+                <div class="col-lg-12">
+
+                      <div class="table-responsive table--no-card m-b-40">
+                        <table
+                          class="table table-borderless table-striped table-earning"
+                          align="center"
+                        >
+                          <thead>
+                            <tr>
+                              <th>Requested On</th>
+                              <th>Organization Name</th>
+                              <th>Type</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                            <tbody id='restaurantTable'>
+                                {% for req in request_reviews %}
+                                    <tr>
+                                        <td> {{ req.request_id.created_at|date:"M d, Y" }} </td>
+
+                                        {% if req.request_id.user_id.user_object.type == 'RE' %}
+                                          <td>
+																						<a target="_blank" href="{% url 'admin:restaurant' id=req.request_id.user_id.user_object.restaurant.id %}">
+																							{{ req.request_id.user_id.user_object.restaurant.company_name }}
+																						</a>
+																					</td>
+                                        {% elif req.request_id.user_id.user_object.type == 'PR' %}
+                                          <td>
+																						<a target="_blank" href="{% url 'admin:program' id=req.request_id.user_id.user_object.program.id %}">
+																							{{ req.request_id.user_id.user_object.program.program_name }}
+																						</a>
+																					</td>
+                                        {% else %}
+                                          <p>unavailable</p>
+                                        {% endif %}
+
+
+																				{% if req.request_id.request_type == 'PR' %}
+																				<td>Profile</td>
+																				{% elif req.request_id.request_type == 'SC' %}
+																				<td>Schedule</td>
+																				{% elif req.request_id.request_type == 'PA' %}
+																				<td>Partner</td>
+																				{% elif req.request_id.request_type == 'O' %}
+																				<td>General</td>
+																				{% endif %}
+
+                                        <td><a href="/admin/request/{{req.id}}/review/" class="btn btn-primary">Review</a></td>
+                                    </tr>
+                                {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+
+                </div>
+              </div>
+
+{% endblock %}

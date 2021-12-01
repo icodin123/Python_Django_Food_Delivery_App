@@ -1,0 +1,17 @@
+{% extends "../base.html" %}
+{% load bootstrap3 %}
+
+
+	{% block head_title %}
+    	<title>New Application</title>
+	{% endblock %}
+
+{% block body_block %}
+	<h4>Send request as a Restaurant</h4>
+	<h4>Send a new pairing request to Feeding Canadian Kids admins</h4>
+	  <form method="POST" action="{% url 'applications:create-restaurant' %}" id="applicationForm">
+		{% csrf_token %}
+		{% bootstrap_form form %}
+		<input type="submit" value="Create" class="btn btn-primary btn-large">
+	  </form>
+{% endblock %}

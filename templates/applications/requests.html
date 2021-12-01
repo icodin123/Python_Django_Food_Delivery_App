@@ -1,0 +1,69 @@
+{% extends "../base.html" %}
+
+	{% block head_title %}
+    	<title>Requests</title>
+	{% endblock %}
+
+	{% block body_block %}
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="overview-wrap">
+					<div class="col-md-6">
+						<h2 class="title-1">Requests</h2>
+					</div>
+					<div class="col-sm-4"></div>
+					<div class="col-md-3">
+							<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">New Request</button> -->
+							<a href="{% url 'requests:createRequest' %}" class="btn btn-primary">New Request</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="row m-t-25">
+			<div class="col-lg-12">
+				<div class="table-responsive table--no-card m-b-40">
+					<table class="table table-borderless table-striped table-earning" align="center">
+						<thead>
+							<tr>
+								<th>Type</th>
+								<th>Status</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for request in requests %}
+
+										{% if request.request_type == 'PR' %}
+										<td>Profile Change</td>
+										{% elif request.request_type == 'SC' %}
+										<td>Schedule Update</td>
+										{% elif request.request_type == 'PA' %}
+										<td>Partner Change</td>
+										{% elif request.request_type == 'O' %}
+										<td>Other</td>
+										{% endif %}
+
+										{% if request.current_request_review_id.status == 'A' %}
+										<td><span class="btn btn-success pointer">Approved</span></td>
+										{% elif request.current_request_review_id.status == 'R' %}
+										<td><span class="btn btn-danger pointer">Not Approved</span></td>
+										{% elif request.current_request_review_id.status == 'P' %}
+										<td><span class="btn btn-info pointer">In Review</span></td>
+										{% endif %}
+
+										<td>
+											{% if request.current_request_review_id.status == 'P' %}
+											<a href="{% url 'requests:edit' id=request.id %}" class="btn btn-primary">Edit</a>
+											{% endif %}
+										</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+	{% endblock %}

@@ -1,0 +1,187 @@
+{% extends "../base.html" %}
+{% load staticfiles %}
+
+
+	{% block head_title %}
+    	<title>Programs List</title>
+
+	{% endblock %}
+
+
+{% block body_block %}
+    <div class="row">
+        <div class="col-md-12">
+          <h2 class="title-1">Programs</h2>
+        </div>
+    </div>
+		<div class="row">
+			<div class="col-md-12">
+	        <div class="dropdown">
+	            <input value="Add New Program" type="button" id="addNewProgram" class="pull-right btn btn-primary"><span style="color:white;"></span></input>
+	        </div>
+	    </div>
+		</div>
+
+		<br>
+
+{% if programs %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive table--no-card m-b-40">
+                    <table
+										id="programTable"
+                    class="table table-borderless table-striped table-earning"
+                    align="center"
+                    >
+                        <thead>
+                            <tr>
+                                <th>Program Name</th>
+                                <th>Main Contact</th>
+                                <th>Phone Number</th>
+                                <th>Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for program in programs %}
+                            <tr>
+                                <td>
+																	<a href="{% url 'admin:program' id=program.id %}">
+																		{{ program.program_name}}
+																	</a>
+																</td>
+                                <td>
+																	<a href="{% url 'admin:user_profile' id=program.main_contact.id %}">
+																		{{ program.main_contact.first_name}} {{ program.main_contact.last_name}}
+																	</a>
+																</td>
+                                <td>{{ program.phone_number}}</td>
+                                  <td>{{ program.address}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+              <div id="addNewProgramCard" class="au-card" style="display: none;">
+
+                <!-- PROGRAM FORM -->
+                <form id="new_program" action="{% url "admin:programs" %}" method="post">
+                  {% csrf_token %}
+                      <div class="row- m-t-25">
+                          <div class="col-md-12">
+                              <h2 class="title-1">Create New Program</h2>
+                          </div>
+                      </div>
+                      <div class="row- m-t-25">
+													<input id="lat" type="hidden" name="lat">
+													<input id="lng" type="hidden" name="lng">
+                          <div class="form-group col-md-6">
+                              <label for="contact_first_name">Main Contact First Name</label>
+                              <input type="text"  name="contact_first_name" class="form-control" id="contact_first_name" required>
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="contact_last_name" > Main Contact Last Name</label>
+                              <input type="text" name="contact_last_name" class="form-control" id="contact_last_name" required>
+                          </div>
+                          <div class="form-group col-md-6" data-validate="Valid email is required: example@fck.org">
+                              <label for="contact_email" >Main Contact Email</label>
+                              <input type="text" name="contact_email" class="form-control" id="contact_email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="contact_phone" >Main Contact Phone Number</label>
+                              <input type="text" name="contact_phone" class="form-control" id="contact_phone" required pattern="\/.*\S.*\/|1?[\s-]?\.?\(?(\d{3})\)?\.?[\s-]?\d{3}[\s-]?\.?\d{4}">
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="contact_position" >Main Contact Position/Title</label>
+                              <input type="text" name="contact_position" class="form-control" id="contact_position">
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="new_program_name" >Program Name</label>
+                              <input type="text" name="new_program_name" class="form-control" id="new_program_name" required>
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="new_program_address" >Program Address</label>
+                              <input type="text" name="new_program_address" class="form-control" id="address" required>
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="new_program_phone" >Program Phone Number</label>
+                              <input type="text" name="new_program_phone" class="form-control" id="new_program_phone" required pattern="\/.*\S.*\/|1?[\s-]?\.?\(?(\d{3})\)?\.?[\s-]?\d{3}[\s-]?\.?\d{4}">
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="new_program_meals" >Program Number of Meals</label>
+                              <input type="text" name="new_program_meals" class="form-control" id="new_program_meals" required>
+                          </div>
+                          <div class="form-group col-md-6">
+                              <label for="new_program_schedule" >What days are required?</label>
+                              <select id="new_program_schedule" name="new_program_schedule" class="selectpicker" multiple data-actions-box="false" title="What days are required?" data-width="100%" required>
+                                <option value="MO"> Monday </option>
+                                <option value="TU"> Tuesday </option>
+                                <option value="WE"> Wednesday </option>
+                                <option value="TH"> Thursday </option>
+                                <option value="FR"> Friday </option>
+                            </select>
+                          </div>
+                          <div class="form-group col-md-6"">
+                             <label for="new_program_start_time" >Select a start time</label>
+                             <input id="new_program_start_time" class="form-control input-field timepicker" name="new_program_start_time" required autocomplete="off">
+                          </div>
+                      </div>
+											<br>
+                      <div class="row- m-t-25">
+                          <div class="col-md-12">
+															<input type="button" id="new-program-back" class="btn btn-danger" value="Back">
+                              <button type="submit" class="btn btn-success id="newProgramSubmit"">Create & Approve</button>
+                          </div>
+                      </div>
+                </form >
+                <!-- END NAME FORM -->
+              </div>
+
+{% endblock %}
+
+{% block javascript_block %}
+
+<script type="text/javascript">
+  $('.timepicker').timepicker({
+    timeFormat: 'h:mm p',
+    interval: 60,
+    minTime: '7:00am',
+    maxTime: '6:00pm',
+    dynamic: false,
+    dropdown: true,
+    scrollbar: true,
+    zindex: 1060
+  });
+</script>
+
+<!-- Google Maps Autocomplete -->
+<script src="{% static "js/google-maps-autocomplete.js" %}"></script>
+
+
+<script>
+
+  $("#addNewProgram").on('click', function(e) {
+    $("#programTable").hide("fast");
+    $("#addNewProgram").hide("fast");
+    $("#addNewProgramCard").show("fast");
+  });
+
+    $("#newProgramSubmit").on('click', function(e) {
+        $("#addNewProgramCard").hide("fast");
+				$("#addNewProgram").show("fast");
+        $("#programTable").show("fast");
+  });
+
+	$("#new-program-back").on('click', function(e) {
+		$("#addNewProgramCard").hide("fast");
+		$("#addNewProgram").show("fast");
+		$("#programTable").show("fast");
+});
+
+</script>
+{% endblock %}
+
+<!-- end document-->

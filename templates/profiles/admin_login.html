@@ -1,0 +1,96 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<!-- Favicon -->
+		<link rel="icon" href="{% static "images/icon/favicon32.jpg" %}" sizes="32x32">
+		<link rel="icon" href="{% static "images/icon/favicon192.jpg" %}" sizes="192x192">
+
+		<!-- meta tags-->
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="Feeding Canadian Kids">
+		<meta name="author" content="Feeding Canadian Kids">
+		<meta name="keywords" content="Feeding Canadian Kids">
+
+		<!-- Title Page-->
+		<title>Admin Login</title>
+
+		<link href="{% static "vendor/font-awesome-4.7/css/font-awesome.min.css" %}" rel="stylesheet" media="all">
+		<link href="{% static "vendor/font-awesome-5/css/fontawesome-all.min.css" %}" rel="stylesheet" media="all">
+
+		<!-- Bootstrap CSS -->
+		<link href="{% static "vendor/bootstrap-4.1/bootstrap.min.css"%}" rel="stylesheet" media="all">
+
+		<!-- Main CSS-->
+		<link href="{% static "css/main.css" %}" rel="stylesheet" media="all">
+		<link rel="stylesheet" type="text/css" href="{% static "css/signup-login.css" %}">
+
+		<link href="{% static "css/signup-login.css" %}" rel="stylesheet" media="all">
+
+	</head>
+
+	<body>
+
+		<div class="limiter">
+			<div class="container-login">
+				<div class="wrap-login">
+					<div class="login-pic js-tilt" data-tilt="">
+						<img src="{% static "images/logo.png" %}" alt="Feeding Canadian Kids">
+					</div>
+					<div class="login-pic js-tilt-cartoon m-t-20" data-tilt="">
+						<img src="{% static "images/cartoon.png" %}" alt="Feeding Canadian Kids">
+					</div>
+
+					<form id="login-form" action="{% url 'admin:admin_login' %}" method="post" class="login-form validate-form" >
+						{% csrf_token %}
+						<span class="login-form-title">
+							Admin Login
+						</span>
+
+						<div class="wrap-input validate-input" data-validate="Valid email is required: example@fck.org">
+							<input class="input" type="text" name="email" placeholder="Email" role="presentation" autocomplete="off">
+							<span class="focus-input"></span>
+							<span class="symbol-input">
+								<i class="fa fa-envelope" aria-hidden="true"></i>
+							</span>
+						</div>
+
+						<div class="wrap-input validate-input" data-validate="Password is required">
+							<input class="input" type="password" name="password" placeholder="Password">
+							<span class="focus-input"></span>
+							<span class="symbol-input">
+								<i class="fa fa-lock" aria-hidden="true"></i>
+							</span>
+						</div>
+
+						<div class="container-login-form-btn">
+							<button class="login-form-btn">
+								Login
+							</button>
+
+							<br>
+						    <br>
+							<br>
+
+						    <p><a href="{% url "password_reset" %}">Forgot your password?</a></p>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- Jquery JS -->
+		<script src="{% static "vendor/jquery-3.2.1.min.js" %}"></script>
+		<!-- Bootstrap JS -->
+		<script src="{% static "vendor/bootstrap-4.1/bootstrap.min.js" %}"></script>
+		<!-- Animation -->
+		<script src="{% static "vendor/animsition/animsition.min.js" %}"></script>
+
+		<!--Tilt JS-->
+		<script src="{% static "vendor/tilt/tilt.jquery.min.js" %}" ></script>
+
+	</body>
+</html>
